@@ -1,0 +1,17 @@
+
+fn main() {
+    let a = 1
+    concurrent {
+        test(a)
+        test(a)
+        test(a)
+    }
+    print("Expected 4 got %v", a)
+}
+
+
+fn test(a) {
+    critical {
+        a = a + 1
+    }
+}
