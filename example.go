@@ -9,7 +9,7 @@ import "sync"
 import "fmt"
 
 // For functions we make a function creator first
-func __CONSTRUCT__func_exmpl() {
+func __CONSTRUCT__func_exmpl() func() {
 	// First is function prelude
 	// Then we return the function
 	return func() {
@@ -20,7 +20,7 @@ func __CONSTRUCT__func_exmpl() {
 //Then we make a function under proper name
 var func_exmpl = __CONSTRUCT__func_exmpl()
 
-func ___CONSTRUCT__test() {
+func ___CONSTRUCT__test() func(*int64) {
 	// for functions with critical keyword
 	// prelude creates one mutex for each critical block
 	// for function to lock on in critical sections
@@ -39,9 +39,9 @@ var test = ___CONSTRUCT__test()
 // We need to track the returns 
 // If there is one it needs to be
 // added to the function definition 
-func __CONSTRUCT__return_in_critical() int64 {
+func __CONSTRUCT__return_in_critical() func(*int64) int64 {
 	m1 := &sync.Mutex{}
-	return func(a *int64) {
+	return func(a *int64) int64 {
 		m1.Lock()
 		a = a + 1 
 		// here we cought return return a - 1
@@ -52,7 +52,7 @@ func __CONSTRUCT__return_in_critical() int64 {
 }
 var return_in_critical = __CONSTRUCT__return_in_critical()
 
-func __CONSTRUCT__multiple_critical(a) {
+func __CONSTRUCT__multiple_critical(a) func(*int64) {
 	// One mutex for each of critical blocks
 	m1 := &sync.Mutex{}
 	m2 := &sync.Mutex{}
