@@ -4,6 +4,7 @@
 src/CMakeFiles/Translator.dir/Lexer/Lexer.cpp.o
  ../include/Exceptions/Utils.h
  ../include/Lexer/Lexer.h
+ ../include/Lexer/Token.h
  /home/igor/Projects/TKOM/Translator/src/Lexer/Lexer.cpp
 src/CMakeFiles/Translator.dir/Lexer/Token.cpp.o
  /home/igor/Projects/TKOM/Translator/src/Lexer/Token.cpp

@@ -15,9 +15,17 @@ string
 -
 fstream
 -
+vector
+-
+tuple
+-
+Token.h
+../include/Lexer/Token.h
 
 ../include/Lexer/Token.h
 string
+-
+vector
 -
 
 /home/igor/Projects/TKOM/Translator/src/Lexer/Lexer.cpp

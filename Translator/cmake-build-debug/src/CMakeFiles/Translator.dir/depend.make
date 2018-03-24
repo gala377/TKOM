@@ -3,6 +3,7 @@
 
 src/CMakeFiles/Translator.dir/Lexer/Lexer.cpp.o: ../include/Exceptions/Utils.h
 src/CMakeFiles/Translator.dir/Lexer/Lexer.cpp.o: ../include/Lexer/Lexer.h
+src/CMakeFiles/Translator.dir/Lexer/Lexer.cpp.o: ../include/Lexer/Token.h
 src/CMakeFiles/Translator.dir/Lexer/Lexer.cpp.o: ../src/Lexer/Lexer.cpp
 
 src/CMakeFiles/Translator.dir/Lexer/Token.cpp.o: ../src/Lexer/Token.cpp
