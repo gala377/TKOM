@@ -1,0 +1,1 @@
+add_executable(Translator main.cpp Lexer/Lexer.cpp Lexer/Token.cpp)

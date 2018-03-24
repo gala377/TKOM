@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/Exceptions/Utils.h
+exception
+-
+
+../include/Lexer/Lexer.h
+string
+-
+fstream
+-
+
+../include/Lexer/Token.h
+string
+-
+
+/home/igor/Projects/TKOM/Translator/src/Lexer/Lexer.cpp
+Lexer/Lexer.h
+/home/igor/Projects/TKOM/Translator/src/Lexer/Lexer/Lexer.h
+Exceptions/Utils.h
+/home/igor/Projects/TKOM/Translator/src/Lexer/Exceptions/Utils.h
+iostream
+-
+
+/home/igor/Projects/TKOM/Translator/src/Lexer/Token.cpp
+
+/home/igor/Projects/TKOM/Translator/src/main.cpp
+iostream
+-
+Lexer/Lexer.h
+/home/igor/Projects/TKOM/Translator/src/Lexer/Lexer.h
+Lexer/Token.h
+/home/igor/Projects/TKOM/Translator/src/Lexer/Token.h
+

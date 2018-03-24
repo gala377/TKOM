@@ -30,7 +30,7 @@ fn multiple_critical(a) {
         a = a - 1
     }
 }
-
+   
 // Main function is like C
 fn main() {
     // example function call
@@ -48,3 +48,8 @@ fn main() {
     // it ends when every computation in it ends
     print("Expected 4 got %v", a)
 }
+
+1. dodać ifa
+2. dodać fory
+3. dodać wyrażenia + - * / i ()
+4. wyrażenia logiczne < > == 

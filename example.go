@@ -77,7 +77,7 @@ func main() {
 	// Function call
 	func_exmpl()
 	// Only type we use is int64
-	int64 a = 1
+	var a int64 = 1
 	// For concurrent blocks we make a new scope
 	{
 		// with wait group at the beggining

@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -std=c++17   CMakeFiles/Translator.dir/main.cpp.o CMakeFiles/Translator.dir/Lexer/Lexer.cpp.o CMakeFiles/Translator.dir/Lexer/Token.cpp.o  -o build/debug/bin/Translator 
