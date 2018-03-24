@@ -8,6 +8,16 @@
 
 using namespace Syntax;
 
+// todo decide on token representation structure
+const std::vector<Keyword> Lexer::_KEYWORDS = {
+
+};
+
+
+const std::vector<Operator> Lexer::_OPERATORS = {
+
+};
+
 void Lexer::loadFile(std::string path) {
     throw UnimplementedError();
 }

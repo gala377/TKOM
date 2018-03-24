@@ -10,6 +10,18 @@
 
 namespace Syntax {
 
+    enum class TokenIdentifier {};
+
+    // todo decide on structure
+    enum class Keywords : public TokenIdentifier {
+        FUNCTION,
+        LOOP,
+        CRITICAL_SECTION,
+        IF,
+        CONCURRENT_BLOCK,
+
+    };
+
     /**
      * Token represents elements returned by getNextToken method
      * provided by Lexem.
@@ -20,57 +32,49 @@ namespace Syntax {
     class Token {
     public:
         Token() = default;
-        Token(std::string identifier, std::string symbol) : _identifier(std::move(identifier)), _symbol(std::move(symbol)) {};
+        Token(TokenIdentifier identifier, std::string symbol) : _identifier(identifier), _symbol(std::move(symbol)) {};
 
-        std::string identifier() { return _identifier; }
+        TokenIdentifier identifier() { return _identifier; }
         std::string symbol() { return _symbol; }
     protected:
-        std::string _identifier;
+        TokenIdentifier _identifier;
         std::string _symbol;
     };
 
+    /**
+     * Keyword represents language specific character sequence
+     * with special meaning for execution
+     */
     class Keyword : public Token {
     public:
-        Keyword() = default;
-        Keyword(std::string identifier, std::string symbol) : Token(std::move(identifier), std::move(symbol)) {};
-    };
-
-    class Operator: public Keyword {
-
+        using Token::Token;
     };
 
     /**
-     * Identifier is special case token it's symbol is derived from
+     * Operator is a keyword with regards to it not being representet
+     * By letters or numbers
+     */
+    class Operator: public Keyword {
+        using Keyword::Token;
+    };
+
+    /**
+     * Identifier is special case token. Tt's symbol is derived from
      * the file parsed
      */
     class Identifier: public Token {
+    public:
+        using Token::Token;
     };
 
     class FunctionIdentifier: public Identifier {
+    public:
+        using Identifier::Token
     };
 
     class VariableIdentifier: public Identifier {
     public:
-        std::int64_t value;
-    };
-
-    const std::vector<Keyword> KEYWORDS = {
-            {"Function", "fn"},
-            {"If", "if"},
-            {"For", "for"},
-            {"Variable", "let"},
-            {"Critical", "critical"},
-            {"Concurrent", "concurrent"},
-    };
-
-    const std::vector<Token> OPERATORS = {
-            {"Plus", "+"},
-            {"Minus", "-"},
-            {"Multiplication", "*"},
-            {"Derivation", "/"},
-            {"Equality", "=="},
-            {"Comparision_GE"}
-
+        using Identifier::Token;
     };
 
 }

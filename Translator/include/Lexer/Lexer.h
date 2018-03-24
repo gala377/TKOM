@@ -7,6 +7,12 @@
 
 #include <string>
 #include <fstream>
+#include <vector>
+
+#include "Token.h"
+
+template <typename T>
+using shared_seq<T> = static const std::vector<T>;
 
 namespace Syntax {
 
@@ -15,7 +21,10 @@ namespace Syntax {
         void loadFile(std::string path);
 
     protected:
-        std::fstream file;
+        std::fstream _file;
+
+        shared_seq<Keyword> _KEYWORDS;
+        shared_seq<Operator> _OPERATORS;
     };
 
 }
