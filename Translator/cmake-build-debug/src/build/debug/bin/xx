@@ -1,0 +1,506 @@
+Reading next token...
+Read: 
+
+TokenType is nil
+Read:  
+TokenType is nil
+1:1 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Read:  
+TokenType is nil
+1:2 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Read:  
+TokenType is nil
+1:3 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Read: 
+
+TokenType is nil
+2:0 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Read: 
+
+TokenType is nil
+3:0 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Read: 2
+TokenType is nil
+3:1 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Infering as Const Expr
+Read: 3
+Assembling Const Expr:
+Read: 8
+Symbol: 23
+Read: 9
+Symbol: 238
+Read: 2
+Symbol: 2389
+Read: 4
+Symbol: 23892
+Read: 8
+Symbol: 238924
+Read: 4
+Symbol: 2389248
+Read: 2
+Symbol: 23892484
+Read: 
+
+Symbol: 238924842
+4:0 Read token: Token{identifier: 7 symbol: 238924842}
+Reading next token...
+Read: s
+TokenType is nil
+4:1 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Infering ch as identifier
+Read: f
+Assembling Identifier:
+Read: g
+Symbol: sf
+Read: f
+Symbol: sfg
+Read: s
+Symbol: sfgf
+Read: 4
+Symbol: sfgfs
+Read: 3
+Symbol: sfgfs4
+Read: 5
+Symbol: sfgfs43
+Read: 2
+Symbol: sfgfs435
+Read: 4
+Symbol: sfgfs4352
+Read: 5
+Symbol: sfgfs43524
+Read: 
+
+Symbol: sfgfs435245
+5:0 Read token: Token{identifier: 1 symbol: sfgfs435245}
+Reading next token...
+Read: _
+TokenType is nil
+5:1 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Infering ch as identifier
+Read: _
+Assembling Identifier:
+Read: d
+Symbol: __
+Read: f
+Symbol: __d
+Read: g
+Symbol: __df
+Read: 5
+Symbol: __dfg
+Read: 3
+Symbol: __dfg5
+Read: 6
+Symbol: __dfg53
+Read: 3
+Symbol: __dfg536
+Read: 5
+Symbol: __dfg5363
+Read: _
+Symbol: __dfg53635
+Read: _
+Symbol: __dfg53635_
+Read: _
+Symbol: __dfg53635__
+Read: _
+Symbol: __dfg53635___
+Read: 
+
+Symbol: __dfg53635____
+6:0 Read token: Token{identifier: 1 symbol: __dfg53635____}
+Reading next token...
+Read: *
+TokenType is nil
+6:1 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Infering ch as an operator
+Read: 
+
+Assembling Operator
+7:0 Read token: Token{identifier: 2 symbol: *}
+Reading next token...
+Read: 
+
+TokenType is nil
+8:0 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Read: 
+
+TokenType is nil
+9:0 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Read: 
+
+TokenType is nil
+10:0 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Read: *
+TokenType is nil
+10:1 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Infering ch as an operator
+Read: 
+
+Assembling Operator
+11:0 Read token: Token{identifier: 2 symbol: *}
+Reading next token...
+Read: 4
+TokenType is nil
+11:1 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Infering as Const Expr
+Read: 2
+Assembling Const Expr:
+Read: 5
+Symbol: 42
+Read:  
+Symbol: 425
+11:4 Read token: Token{identifier: 7 symbol: 425}
+Reading next token...
+Read: *
+TokenType is nil
+11:5 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Infering ch as an operator
+Read:  
+Assembling Operator
+11:6 Read token: Token{identifier: 2 symbol: *}
+Reading next token...
+Read: 4
+TokenType is nil
+11:7 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Infering as Const Expr
+Read: 5
+Assembling Const Expr:
+Read: 6
+Symbol: 45
+Read: 
+
+Symbol: 456
+12:0 Read token: Token{identifier: 7 symbol: 456}
+Reading next token...
+Read: a
+TokenType is nil
+12:1 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Infering ch as identifier
+Read:  
+Assembling Identifier:
+12:2 Read token: Token{identifier: 1 symbol: a}
+Reading next token...
+Read: +
+TokenType is nil
+12:3 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Infering ch as an operator
+Read:  
+Assembling Operator
+12:4 Read token: Token{identifier: 2 symbol: +}
+Reading next token...
+Read: 3
+TokenType is nil
+12:5 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Infering as Const Expr
+Read: 4
+Assembling Const Expr:
+Read: 
+
+Symbol: 34
+13:0 Read token: Token{identifier: 7 symbol: 34}
+Reading next token...
+Read: 
+
+TokenType is nil
+14:0 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Read: F
+TokenType is nil
+14:1 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Infering ch as identifier
+Read: U
+Assembling Identifier:
+Read: N
+Symbol: FU
+Read: C
+Symbol: FUN
+Read: T
+Symbol: FUNC
+Read: I
+Symbol: FUNCT
+Read: O
+Symbol: FUNCTI
+Read: N
+Symbol: FUNCTIO
+Read: _
+Symbol: FUNCTION
+Read: P
+Symbol: FUNCTION_
+Read: A
+Symbol: FUNCTION_P
+Read: R
+Symbol: FUNCTION_PA
+Read: S
+Symbol: FUNCTION_PAR
+Read: E
+Symbol: FUNCTION_PARS
+Read: _
+Symbol: FUNCTION_PARSE
+Read: T
+Symbol: FUNCTION_PARSE_
+Read: E
+Symbol: FUNCTION_PARSE_T
+Read: S
+Symbol: FUNCTION_PARSE_TE
+Read: T
+Symbol: FUNCTION_PARSE_TES
+Read: 
+
+Symbol: FUNCTION_PARSE_TEST
+15:0 Read token: Token{identifier: 1 symbol: FUNCTION_PARSE_TEST}
+Reading next token...
+Read: 
+
+TokenType is nil
+16:0 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Read: f
+TokenType is nil
+16:1 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Infering ch as identifier
+Read: n
+Assembling Identifier:
+Read:  
+Symbol: fn
+16:3 Read token: Token{identifier: 1 symbol: fn}
+Reading next token...
+Read: t
+TokenType is nil
+16:4 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Infering ch as identifier
+Read: e
+Assembling Identifier:
+Read: s
+Symbol: te
+Read: t
+Symbol: tes
+Read: _
+Symbol: test
+Read: f
+Symbol: test_
+Read: u
+Symbol: test_f
+Read: n
+Symbol: test_fu
+Read: c
+Symbol: test_fun
+Read: (
+Symbol: test_func
+16:13 Read token: Token{identifier: 1 symbol: test_func}
+Reading next token...
+Infering ch as an operator
+Read: p
+Assembling Operator
+16:14 Read token: Token{identifier: 2 symbol: (}
+Reading next token...
+Infering ch as identifier
+Read: a
+Assembling Identifier:
+Read: r
+Symbol: pa
+Read: a
+Symbol: par
+Read: m
+Symbol: para
+Read: _
+Symbol: param
+Read: 1
+Symbol: param_
+Read: ,
+Symbol: param_1
+Read:  
+Symbol: param_1
+16:22 Read token: Token{identifier: 1 symbol: param_1}
+Reading next token...
+Read: p
+TokenType is nil
+16:23 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Infering ch as identifier
+Read: a
+Assembling Identifier:
+Read: r
+Symbol: pa
+Read: a
+Symbol: par
+Read: m
+Symbol: para
+Read: _
+Symbol: param
+Read: 2
+Symbol: param_
+Read: )
+Symbol: param_2
+16:30 Read token: Token{identifier: 1 symbol: param_2}
+Reading next token...
+Infering ch as an operator
+Read:  
+Assembling Operator
+16:31 Read token: Token{identifier: 2 symbol: )}
+Reading next token...
+Read: {
+TokenType is nil
+16:32 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Infering ch as an operator
+Read: 
+
+Assembling Operator
+17:0 Read token: Token{identifier: 2 symbol: {}
+Reading next token...
+Read:  
+TokenType is nil
+17:1 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Read:  
+TokenType is nil
+17:2 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Read:  
+TokenType is nil
+17:3 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Read:  
+TokenType is nil
+17:4 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Read: r
+TokenType is nil
+17:5 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Infering ch as identifier
+Read: e
+Assembling Identifier:
+Read: t
+Symbol: re
+Read: u
+Symbol: ret
+Read: r
+Symbol: retu
+Read: n
+Symbol: retur
+Read:  
+Symbol: return
+17:11 Read token: Token{identifier: 1 symbol: return}
+Reading next token...
+Read: p
+TokenType is nil
+17:12 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Infering ch as identifier
+Read: a
+Assembling Identifier:
+Read: r
+Symbol: pa
+Read: a
+Symbol: par
+Read: m
+Symbol: para
+Read: _
+Symbol: param
+Read: 1
+Symbol: param_
+Read:  
+Symbol: param_1
+17:19 Read token: Token{identifier: 1 symbol: param_1}
+Reading next token...
+Read: +
+TokenType is nil
+17:20 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Infering ch as an operator
+Read:  
+Assembling Operator
+17:21 Read token: Token{identifier: 2 symbol: +}
+Reading next token...
+Read: p
+TokenType is nil
+17:22 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Infering ch as identifier
+Read: a
+Assembling Identifier:
+Read: r
+Symbol: pa
+Read: a
+Symbol: par
+Read: m
+Symbol: para
+Read: _
+Symbol: param
+Read: 2
+Symbol: param_
+Read:  
+Symbol: param_2
+17:29 Read token: Token{identifier: 1 symbol: param_2}
+Reading next token...
+Read: *
+TokenType is nil
+17:30 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Infering ch as an operator
+Read:  
+Assembling Operator
+17:31 Read token: Token{identifier: 2 symbol: *}
+Reading next token...
+Read: 2
+TokenType is nil
+17:32 Read token: Token{identifier: 22 symbol:  }
+Reading next token...
+Infering as Const Expr
+Read: 0
+Assembling Const Expr:
+Read: 
+
+Symbol: 20
+18:0 Read token: Token{identifier: 7 symbol: 20}
+Reading next token...
+Read: }
+TokenType is nil
+18:1 Read token: Token{identifier: 22 symbol: 
+}
+Reading next token...
+Infering ch as an operator
+Read:  
+Assembling Operator
+18:2 Read token: Token{identifier: 2 symbol: }}
+Reading next token...
+18:0 Read token: Token{identifier: 0 symbol: }

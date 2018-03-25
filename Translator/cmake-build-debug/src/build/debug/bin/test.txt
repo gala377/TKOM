@@ -1,5 +1,5 @@
 
-
+   
 
 238924842
 sfgfs435245
@@ -12,3 +12,8 @@ __dfg53635____
 425 * 456
 a + 34
 
+FUNCTION_PARSE_TEST
+
+fn test_func(param_1, param_2) {
+    return param_1 + param_2 * 20
+}
