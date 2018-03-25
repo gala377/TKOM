@@ -11,7 +11,8 @@
 namespace Syntax {
 
     enum class TokenType {
-        Nil, Identifier, Keyword, Operator, ConstExpr, Comment
+        Nil, Identifier, Keyword, Operator,
+        ConstExpr, Comment, Blank,
     };
 
     enum class TokenIdentifier {
@@ -31,9 +32,10 @@ namespace Syntax {
         // Operators
         Equality=14, Addition, Multiplication,
         Division, Assigment, Greatness,
-        Minority, Comma
+        Minority, Comma,
 
-
+        //Other
+        Space=22,
 
     };
 

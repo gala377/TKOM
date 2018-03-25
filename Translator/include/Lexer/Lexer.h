@@ -9,6 +9,8 @@
 #include <fstream>
 #include <vector>
 #include <tuple>
+#include <map>
+#include <functional>
 
 #include "Token.h"
 
@@ -19,6 +21,10 @@ namespace Syntax {
 
     class Lexer {
     public:
+        bool skip_spaces = true;
+        bool skip_new_lines = true;
+
+        Lexer();
         ~Lexer();
 
         void loadFile(std::string path);
@@ -33,20 +39,38 @@ namespace Syntax {
         // Reading information
         std::uint32_t _file_line = 0;
         std::uint32_t _in_line_position = 0;
-        char last_read_ch = '\0';
+        char _last_read_ch = '\0';
 
-        // Reading methods
+        // Token processing
+        std::map<TokenType, std::function<Token(char)>> _token_assemblers;
+
+        bool skipSpaces() const;
+        bool skipNewLines() const;
+        bool skipBlanks() const;
+
+        // Reading methods on file
         char getChar();
         char getNextNonBlankChar();
         bool eof() const;
 
         // Helpers for reading
-        std::tuple<std::string, TokenType> initNewSymbol() const;
+        char getNextChar();
         TokenType inferTokenTypeByFirstCharacter(const char ch) const;
 
+        Token processBlankChar(char ch);
+        Token processConstExpr(char ch);
+        Token processOperator(char ch);
+        Token processIdentifier(char ch);
+
+
+        std::string assembleConstExpr(char current);
+        std::string assembleOperator(char current);
+        std::string assembleIdentifier(char current);
+
+        Token newToken(TokenIdentifier id, std::string symbol) const;
 
         static shared_seq<Token> _KEYWORDS;
-//        static shared_seq<Token> _OPERATORS;
+        static shared_seq<Token> _OPERATORS;
     };
 }
 #endif //TRANSLATOR_LEXER_H
