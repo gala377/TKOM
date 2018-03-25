@@ -125,6 +125,33 @@ Translator/fast:
 	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug && $(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/build
 .PHONY : Translator/fast
 
+Lexer/Characters.o: Lexer/Characters.cpp.o
+
+.PHONY : Lexer/Characters.o
+
+# target to build an object file
+Lexer/Characters.cpp.o:
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug && $(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Lexer/Characters.cpp.o
+.PHONY : Lexer/Characters.cpp.o
+
+Lexer/Characters.i: Lexer/Characters.cpp.i
+
+.PHONY : Lexer/Characters.i
+
+# target to preprocess a source file
+Lexer/Characters.cpp.i:
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug && $(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Lexer/Characters.cpp.i
+.PHONY : Lexer/Characters.cpp.i
+
+Lexer/Characters.s: Lexer/Characters.cpp.s
+
+.PHONY : Lexer/Characters.s
+
+# target to generate assembly for a file
+Lexer/Characters.cpp.s:
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug && $(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Lexer/Characters.cpp.s
+.PHONY : Lexer/Characters.cpp.s
+
 Lexer/Lexer.o: Lexer/Lexer.cpp.o
 
 .PHONY : Lexer/Lexer.o
@@ -215,6 +242,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... Translator"
+	@echo "... Lexer/Characters.o"
+	@echo "... Lexer/Characters.i"
+	@echo "... Lexer/Characters.s"
 	@echo "... Lexer/Lexer.o"
 	@echo "... Lexer/Lexer.i"
 	@echo "... Lexer/Lexer.s"

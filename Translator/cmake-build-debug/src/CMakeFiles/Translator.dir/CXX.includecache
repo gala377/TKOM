@@ -6,8 +6,8 @@
 
 #IncludeRegexTransform: 
 
-../include/Exceptions/Utils.h
-exception
+../include/Lexer/Characters.h
+set
 -
 
 ../include/Lexer/Lexer.h
@@ -28,11 +28,19 @@ string
 vector
 -
 
+/home/igor/Projects/TKOM/Translator/src/Lexer/Characters.cpp
+Lexer/Characters.h
+/home/igor/Projects/TKOM/Translator/src/Lexer/Lexer/Characters.h
+string
+-
+iostream
+-
+
 /home/igor/Projects/TKOM/Translator/src/Lexer/Lexer.cpp
 Lexer/Lexer.h
 /home/igor/Projects/TKOM/Translator/src/Lexer/Lexer/Lexer.h
-Exceptions/Utils.h
-/home/igor/Projects/TKOM/Translator/src/Lexer/Exceptions/Utils.h
+Lexer/Characters.h
+/home/igor/Projects/TKOM/Translator/src/Lexer/Lexer/Characters.h
 iostream
 -
 

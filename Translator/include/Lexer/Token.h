@@ -10,6 +10,10 @@
 
 namespace Syntax {
 
+    enum class TokenType {
+        Nil, Identifier, Keyword, Operator, ConstExpr, Comment
+    };
+
     enum class TokenIdentifier {
 
         Nil=0,

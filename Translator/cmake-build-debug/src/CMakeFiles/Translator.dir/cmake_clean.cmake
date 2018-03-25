@@ -2,6 +2,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/Translator.dir/main.cpp.o"
   "CMakeFiles/Translator.dir/Lexer/Lexer.cpp.o"
   "CMakeFiles/Translator.dir/Lexer/Token.cpp.o"
+  "CMakeFiles/Translator.dir/Lexer/Characters.cpp.o"
   "build/debug/bin/Translator.pdb"
   "build/debug/bin/Translator"
 )

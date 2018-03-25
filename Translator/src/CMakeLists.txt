@@ -1,1 +1,1 @@
-add_executable(Translator main.cpp Lexer/Lexer.cpp Lexer/Token.cpp)
+add_executable(Translator main.cpp Lexer/Lexer.cpp Lexer/Token.cpp ../include/Lexer/Characters.h Lexer/Characters.cpp)
