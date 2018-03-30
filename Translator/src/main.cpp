@@ -29,7 +29,7 @@ int main() {
 
 std::string tokenToStr(const Syntax::Token& t) {
     auto res = std::to_string(t.line()) + ":" + std::to_string(t.position());
-    res += " TOKEN { identifier: " + std::to_string(int(t.identifier()));
+    res += " TOKEN { type: " + std::to_string(int(t.type())) + " dentifier: " + std::to_string(int(t.identifier()));
     res += " symbol: \"" + t.symbol() + "\" }\n";
     return res;
 

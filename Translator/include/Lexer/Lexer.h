@@ -14,8 +14,7 @@
 
 #include "Token.h"
 
-template <typename T>
-using shared_seq = const std::vector<T>;
+using SymbolMap = const std::map<std::string, Syntax::TokenIdentifier>;
 
 namespace Syntax {
 
@@ -49,6 +48,7 @@ namespace Syntax {
         bool skipBlanks() const;
 
         // Reading methods on file
+        // TODO refactor to other class
         char getChar();
         char getNextNonBlankChar();
         bool eof() const;
@@ -69,8 +69,8 @@ namespace Syntax {
 
         Token newToken(TokenIdentifier id, std::string symbol) const;
 
-        static shared_seq<Token> _KEYWORDS;
-        static shared_seq<Token> _OPERATORS;
+        static SymbolMap _KEYWORDS;
+        static SymbolMap _OPERATORS;
     };
 }
 #endif //TRANSLATOR_LEXER_H

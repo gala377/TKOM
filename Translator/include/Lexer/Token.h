@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 namespace Syntax {
 
@@ -26,16 +27,17 @@ namespace Syntax {
         ConstExpr=7,
 
         // Keywords
-        Function=8, Loop, If,
+        Function=8, Loop, If, Else,
         Critical, Concurrent, Variable,
+        Return,
 
         // Operators
-        Equality=14, Addition, Multiplication,
+        Equality=16, Addition, Multiplication,
         Division, Assigment, Greatness,
         Minority, Comma,
 
         //Other
-        Space=22,
+        Space=24, NewLine,
 
     };
 
@@ -48,71 +50,41 @@ namespace Syntax {
      */
     class Token {
     public:
-        Token() : _identifier(TokenIdentifier::Nil) {};
+        Token() : _identifier(TokenIdentifier::Nil),
+                  _type(TokenType::Nil),
+                  _line(0),
+                  _position(0) {};
 
-        // TODO this needs to be split into 2 different struct
-        // One is TOKEN reterned by Lexem
-        // Second is map symbol -> identifier
-        Token(TokenIdentifier identifier,
-              std::string symbol
-        ) : _identifier(identifier),
-            _symbol(std::move(symbol)),
-            _line(0),
-            _position(0) {};
+        Token(TokenIdentifier identifier, std::string symbol) : _identifier(identifier),
+                                                                _type((*_ID_TO_TYPE.find(identifier)).second),
+                                                                _symbol(std::move(symbol)),
+                                                                _line(0),
+                                                                _position(0) {};
         Token(TokenIdentifier identifier,
               std::string symbol,
               std::uint32_t line,
-              std::uint32_t position
-        ) : _identifier(identifier),
-            _symbol(std::move(symbol)),
-            _line(line),
-            _position(position) {};
+              std::uint32_t position) : _identifier(identifier),
+                                        _type((*_ID_TO_TYPE.find(identifier)).second),
+                                        _symbol(std::move(symbol)),
+                                        _line(line),
+                                        _position(position) {};
+
+
+
 
         TokenIdentifier identifier() const { return _identifier; }
         std::string symbol() const { return _symbol; }
         std::uint32_t line() const { return _line; }
         std::uint32_t position() const { return _position; };
+        TokenType type() const { return _type; }
     protected:
         TokenIdentifier _identifier;
+        TokenType _type;
         std::string _symbol;
         std::uint32_t _line;
         std::uint32_t _position;
-    };
 
-    /**
-     * Keyword represents language specific character sequence
-     * with special meaning for execution
-     */
-    class Keyword : public Token {
-    public:
-        using Token::Token;
-    };
-
-    /**
-     * Operator is a keyword with regards to it not being representet
-     * By letters or numbers
-     */
-    class Operator: public Keyword {
-        using Keyword::Token;
-    };
-
-    /**
-     * Identifier is special case token. Tt's symbol is derived from
-     * the file parsed
-     */
-    class Identifier: public Token {
-    public:
-        using Token::Token;
-    };
-
-    class FunctionIdentifier: public Identifier {
-    public:
-        using Identifier::Token;
-    };
-
-    class VariableIdentifier: public Identifier {
-    public:
-        using Identifier::Token;
+        static const std::map<TokenIdentifier, TokenType> _ID_TO_TYPE;
     };
 
 }

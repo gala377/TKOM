@@ -31,6 +31,8 @@ string
 -
 vector
 -
+map
+-
 
 /home/igor/Projects/TKOM/Translator/src/Lexer/Characters.cpp
 Lexer/Characters.h
@@ -49,6 +51,8 @@ iostream
 -
 
 /home/igor/Projects/TKOM/Translator/src/Lexer/Token.cpp
+Lexer/Token.h
+/home/igor/Projects/TKOM/Translator/src/Lexer/Lexer/Token.h
 
 /home/igor/Projects/TKOM/Translator/src/main.cpp
 iostream

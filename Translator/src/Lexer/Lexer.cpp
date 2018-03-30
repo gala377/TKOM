@@ -8,30 +8,31 @@
 
 using namespace Syntax;
 
-const std::vector<Token> Lexer::_KEYWORDS = {
-        {TokenIdentifier::Function, "fn"},
-        {TokenIdentifier::Loop, "for"},
-        {TokenIdentifier::If, "if"},
-        {TokenIdentifier::Critical, "critical"},
-        {TokenIdentifier::Concurrent, "concurrent"},
-        {TokenIdentifier::Variable, "let"},
+SymbolMap Lexer::_KEYWORDS = {
+        {"fn", TokenIdentifier::Function},
+        {"for", TokenIdentifier::Loop},
+        {"if", TokenIdentifier::If},
+        {"critical", TokenIdentifier::Critical},
+        {"concurrent", TokenIdentifier::Concurrent},
+        {"let", TokenIdentifier::Variable},
+        {"return", TokenIdentifier::Return},
 };
 
 
-const std::vector<Token> Lexer::_OPERATORS = {
-        {TokenIdentifier::Equality, "=="},
-        {TokenIdentifier::Addition, "+"},
-        {TokenIdentifier::Multiplication, "*"},
-        {TokenIdentifier::Division, "/"},
-        {TokenIdentifier::Assigment, "="},
-        {TokenIdentifier::Greatness, ">"},
-        {TokenIdentifier::Minority, "<"},
-        {TokenIdentifier::OpenBracket, "("},
-        {TokenIdentifier::CloseBracket, ")"},
-        {TokenIdentifier::OpenCurlyBracker, "}"},
-        {TokenIdentifier::CloseCurlyBracket, "}"},
-        {TokenIdentifier::Comma, ","},
-        {TokenIdentifier::Comment, "//"},
+SymbolMap Lexer::_OPERATORS = {
+        {"==", TokenIdentifier::Equality},
+        {"+", TokenIdentifier::Addition},
+        {"*", TokenIdentifier::Multiplication},
+        {"/", TokenIdentifier::Division},
+        {"=", TokenIdentifier::Assigment},
+        {">", TokenIdentifier::Greatness},
+        {"<", TokenIdentifier::Minority},
+        {"(", TokenIdentifier::OpenBracket},
+        {")", TokenIdentifier::CloseBracket},
+        {"}", TokenIdentifier::OpenCurlyBracker},
+        {"}", TokenIdentifier::CloseCurlyBracket},
+        {",", TokenIdentifier::Comma},
+        {"#", TokenIdentifier::Comment},
 };
 
 
@@ -172,6 +173,9 @@ Token Lexer::processBlankChar(char ch) {
         std::cout << "Skipping blanks\n";
         _last_read_ch = getNextNonBlankChar();
     }
+    if(isNewLine(ch)) {
+        return newToken(TokenIdentifier::NewLine, {ch});
+    }
     return newToken(TokenIdentifier::Space, {ch});
 }
 
@@ -182,13 +186,16 @@ Token Lexer::processConstExpr(char ch) {
 
 Token Lexer::processIdentifier(char ch) {
     auto symbol = assembleIdentifier(ch);
+    if(_KEYWORDS.find(symbol) != _KEYWORDS.end()) {
+        return newToken((*_KEYWORDS.find(symbol)).second, symbol);
+    }
     return newToken(TokenIdentifier::Identifier, symbol);
 
 }
 
 Token Lexer::processOperator(char ch) {
     auto symbol = assembleOperator(ch);
-    return newToken(TokenIdentifier::OpenCurlyBracker, symbol);
+    return newToken((*_OPERATORS.find(symbol)).second, symbol);
 }
 
 
@@ -247,7 +254,12 @@ std::string Lexer::assembleOperator(char current) {
     std::string symbol;
     do {
         if (isPartOfOperator(current)) {
-            symbol += current;
+            auto guess = symbol + current;
+            if (_OPERATORS.find(guess) == _OPERATORS.end()) {
+                _last_read_ch = current;
+                return symbol;
+            }
+            symbol = guess;
         } else if (isBlank(current) || isPartOfIdentifier(current) ){
             _last_read_ch = current;
             return symbol;
