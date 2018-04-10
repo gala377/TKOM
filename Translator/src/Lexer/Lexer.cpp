@@ -8,6 +8,8 @@
 
 using namespace Syntax;
 
+// TODO make it so the identifiers and the rest have max lenght
+
 SymbolMap Lexer::_KEYWORDS = {
         {"fn", TokenIdentifier::Function},
         {"for", TokenIdentifier::Loop},
@@ -152,6 +154,11 @@ TokenType Lexer::inferTokenTypeByFirstCharacter(const char ch) const {
         std::cout << "Infering ch as comment\n";
         return TokenType::Comment;
     }
+    // Todo actualy there is a need for a print function
+    // to work a little bit different
+    // As it takes const char*
+    // So make it work or scrap the idea alltogether 
+    throw std::runtime_error("Uknown character!")
     return TokenType::Nil;
 }
 
