@@ -153,12 +153,87 @@ src/CMakeFiles/Translator.dir/Lexer/Characters.cpp.o.provides: src/CMakeFiles/Tr
 src/CMakeFiles/Translator.dir/Lexer/Characters.cpp.o.provides.build: src/CMakeFiles/Translator.dir/Lexer/Characters.cpp.o
 
 
+src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o: src/CMakeFiles/Translator.dir/flags.make
+src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o: ../src/Parser/Parser.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/igor/Projects/TKOM/Translator/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o"
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Translator.dir/Parser/Parser.cpp.o -c /home/igor/Projects/TKOM/Translator/src/Parser/Parser.cpp
+
+src/CMakeFiles/Translator.dir/Parser/Parser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Translator.dir/Parser/Parser.cpp.i"
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/igor/Projects/TKOM/Translator/src/Parser/Parser.cpp > CMakeFiles/Translator.dir/Parser/Parser.cpp.i
+
+src/CMakeFiles/Translator.dir/Parser/Parser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Translator.dir/Parser/Parser.cpp.s"
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/igor/Projects/TKOM/Translator/src/Parser/Parser.cpp -o CMakeFiles/Translator.dir/Parser/Parser.cpp.s
+
+src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o.requires:
+
+.PHONY : src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o.requires
+
+src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o.provides: src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o.requires
+	$(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o.provides.build
+.PHONY : src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o.provides
+
+src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o.provides.build: src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o
+
+
+src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o: src/CMakeFiles/Translator.dir/flags.make
+src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o: ../src/Parser/Tree.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/igor/Projects/TKOM/Translator/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o"
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Translator.dir/Parser/Tree.cpp.o -c /home/igor/Projects/TKOM/Translator/src/Parser/Tree.cpp
+
+src/CMakeFiles/Translator.dir/Parser/Tree.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Translator.dir/Parser/Tree.cpp.i"
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/igor/Projects/TKOM/Translator/src/Parser/Tree.cpp > CMakeFiles/Translator.dir/Parser/Tree.cpp.i
+
+src/CMakeFiles/Translator.dir/Parser/Tree.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Translator.dir/Parser/Tree.cpp.s"
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/igor/Projects/TKOM/Translator/src/Parser/Tree.cpp -o CMakeFiles/Translator.dir/Parser/Tree.cpp.s
+
+src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o.requires:
+
+.PHONY : src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o.requires
+
+src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o.provides: src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o.requires
+	$(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o.provides.build
+.PHONY : src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o.provides
+
+src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o.provides.build: src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o
+
+
+src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o: src/CMakeFiles/Translator.dir/flags.make
+src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o: ../src/Parser/Nodes.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/igor/Projects/TKOM/Translator/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o"
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Translator.dir/Parser/Nodes.cpp.o -c /home/igor/Projects/TKOM/Translator/src/Parser/Nodes.cpp
+
+src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Translator.dir/Parser/Nodes.cpp.i"
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/igor/Projects/TKOM/Translator/src/Parser/Nodes.cpp > CMakeFiles/Translator.dir/Parser/Nodes.cpp.i
+
+src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Translator.dir/Parser/Nodes.cpp.s"
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/igor/Projects/TKOM/Translator/src/Parser/Nodes.cpp -o CMakeFiles/Translator.dir/Parser/Nodes.cpp.s
+
+src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o.requires:
+
+.PHONY : src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o.requires
+
+src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o.provides: src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o.requires
+	$(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o.provides.build
+.PHONY : src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o.provides
+
+src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o.provides.build: src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o
+
+
 # Object files for target Translator
 Translator_OBJECTS = \
 "CMakeFiles/Translator.dir/main.cpp.o" \
 "CMakeFiles/Translator.dir/Lexer/Lexer.cpp.o" \
 "CMakeFiles/Translator.dir/Lexer/Token.cpp.o" \
-"CMakeFiles/Translator.dir/Lexer/Characters.cpp.o"
+"CMakeFiles/Translator.dir/Lexer/Characters.cpp.o" \
+"CMakeFiles/Translator.dir/Parser/Parser.cpp.o" \
+"CMakeFiles/Translator.dir/Parser/Tree.cpp.o" \
+"CMakeFiles/Translator.dir/Parser/Nodes.cpp.o"
 
 # External object files for target Translator
 Translator_EXTERNAL_OBJECTS =
@@ -167,9 +242,12 @@ src/build/debug/bin/Translator: src/CMakeFiles/Translator.dir/main.cpp.o
 src/build/debug/bin/Translator: src/CMakeFiles/Translator.dir/Lexer/Lexer.cpp.o
 src/build/debug/bin/Translator: src/CMakeFiles/Translator.dir/Lexer/Token.cpp.o
 src/build/debug/bin/Translator: src/CMakeFiles/Translator.dir/Lexer/Characters.cpp.o
+src/build/debug/bin/Translator: src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o
+src/build/debug/bin/Translator: src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o
+src/build/debug/bin/Translator: src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o
 src/build/debug/bin/Translator: src/CMakeFiles/Translator.dir/build.make
 src/build/debug/bin/Translator: src/CMakeFiles/Translator.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/igor/Projects/TKOM/Translator/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable build/debug/bin/Translator"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/igor/Projects/TKOM/Translator/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable build/debug/bin/Translator"
 	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug/src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Translator.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -181,6 +259,9 @@ src/CMakeFiles/Translator.dir/requires: src/CMakeFiles/Translator.dir/main.cpp.o
 src/CMakeFiles/Translator.dir/requires: src/CMakeFiles/Translator.dir/Lexer/Lexer.cpp.o.requires
 src/CMakeFiles/Translator.dir/requires: src/CMakeFiles/Translator.dir/Lexer/Token.cpp.o.requires
 src/CMakeFiles/Translator.dir/requires: src/CMakeFiles/Translator.dir/Lexer/Characters.cpp.o.requires
+src/CMakeFiles/Translator.dir/requires: src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o.requires
+src/CMakeFiles/Translator.dir/requires: src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o.requires
+src/CMakeFiles/Translator.dir/requires: src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o.requires
 
 .PHONY : src/CMakeFiles/Translator.dir/requires
 

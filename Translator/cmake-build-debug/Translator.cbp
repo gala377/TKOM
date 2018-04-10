@@ -86,9 +86,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/igor/Projects/TKOM/Translator/include/Lexer/Characters.h">
-			<Option target="Translator"/>
-		</Unit>
 		<Unit filename="/home/igor/Projects/TKOM/Translator/src/Lexer/Characters.cpp">
 			<Option target="Translator"/>
 		</Unit>
@@ -96,6 +93,15 @@
 			<Option target="Translator"/>
 		</Unit>
 		<Unit filename="/home/igor/Projects/TKOM/Translator/src/Lexer/Token.cpp">
+			<Option target="Translator"/>
+		</Unit>
+		<Unit filename="/home/igor/Projects/TKOM/Translator/src/Parser/Nodes.cpp">
+			<Option target="Translator"/>
+		</Unit>
+		<Unit filename="/home/igor/Projects/TKOM/Translator/src/Parser/Parser.cpp">
+			<Option target="Translator"/>
+		</Unit>
+		<Unit filename="/home/igor/Projects/TKOM/Translator/src/Parser/Tree.cpp">
 			<Option target="Translator"/>
 		</Unit>
 		<Unit filename="/home/igor/Projects/TKOM/Translator/src/main.cpp">

@@ -3,6 +3,7 @@
 
 #include "Lexer/Lexer.h"
 #include "Parser/Tree.h"
+#include "Parser/Nodes.h"
 #include <set>
 
 namespace Parser {
@@ -15,16 +16,19 @@ namespace Parser {
         Tree parse();
 
         private:
+
         Syntax::Lexer& _lexer;
         Tree _tree;
 
         // TODO change to hash set
         std::set<std::string> _identifiers;
 
-        Node* parseFunction(Syntax::Token& curr);
-        bool validateFunctionDeclaration(Syntax::Token& curr);
+        Tree::Node* parseFunction();
+        Function* assembleFunctionDeclaration();
+        std::vector<std::string> parseFunctionArguments();
 
-        Node* parseFunctionBodyInstruction(Syntax::Token curr);
+
+        Tree::Node* parseFunctionBodyInstruction();
     };
 
 }

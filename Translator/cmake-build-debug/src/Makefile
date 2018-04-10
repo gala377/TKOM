@@ -206,6 +206,87 @@ Lexer/Token.cpp.s:
 	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug && $(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Lexer/Token.cpp.s
 .PHONY : Lexer/Token.cpp.s
 
+Parser/Nodes.o: Parser/Nodes.cpp.o
+
+.PHONY : Parser/Nodes.o
+
+# target to build an object file
+Parser/Nodes.cpp.o:
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug && $(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o
+.PHONY : Parser/Nodes.cpp.o
+
+Parser/Nodes.i: Parser/Nodes.cpp.i
+
+.PHONY : Parser/Nodes.i
+
+# target to preprocess a source file
+Parser/Nodes.cpp.i:
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug && $(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.i
+.PHONY : Parser/Nodes.cpp.i
+
+Parser/Nodes.s: Parser/Nodes.cpp.s
+
+.PHONY : Parser/Nodes.s
+
+# target to generate assembly for a file
+Parser/Nodes.cpp.s:
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug && $(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.s
+.PHONY : Parser/Nodes.cpp.s
+
+Parser/Parser.o: Parser/Parser.cpp.o
+
+.PHONY : Parser/Parser.o
+
+# target to build an object file
+Parser/Parser.cpp.o:
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug && $(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o
+.PHONY : Parser/Parser.cpp.o
+
+Parser/Parser.i: Parser/Parser.cpp.i
+
+.PHONY : Parser/Parser.i
+
+# target to preprocess a source file
+Parser/Parser.cpp.i:
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug && $(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Parser/Parser.cpp.i
+.PHONY : Parser/Parser.cpp.i
+
+Parser/Parser.s: Parser/Parser.cpp.s
+
+.PHONY : Parser/Parser.s
+
+# target to generate assembly for a file
+Parser/Parser.cpp.s:
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug && $(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Parser/Parser.cpp.s
+.PHONY : Parser/Parser.cpp.s
+
+Parser/Tree.o: Parser/Tree.cpp.o
+
+.PHONY : Parser/Tree.o
+
+# target to build an object file
+Parser/Tree.cpp.o:
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug && $(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o
+.PHONY : Parser/Tree.cpp.o
+
+Parser/Tree.i: Parser/Tree.cpp.i
+
+.PHONY : Parser/Tree.i
+
+# target to preprocess a source file
+Parser/Tree.cpp.i:
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug && $(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Parser/Tree.cpp.i
+.PHONY : Parser/Tree.cpp.i
+
+Parser/Tree.s: Parser/Tree.cpp.s
+
+.PHONY : Parser/Tree.s
+
+# target to generate assembly for a file
+Parser/Tree.cpp.s:
+	cd /home/igor/Projects/TKOM/Translator/cmake-build-debug && $(MAKE) -f src/CMakeFiles/Translator.dir/build.make src/CMakeFiles/Translator.dir/Parser/Tree.cpp.s
+.PHONY : Parser/Tree.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -251,6 +332,15 @@ help:
 	@echo "... Lexer/Token.o"
 	@echo "... Lexer/Token.i"
 	@echo "... Lexer/Token.s"
+	@echo "... Parser/Nodes.o"
+	@echo "... Parser/Nodes.i"
+	@echo "... Parser/Nodes.s"
+	@echo "... Parser/Parser.o"
+	@echo "... Parser/Parser.i"
+	@echo "... Parser/Parser.s"
+	@echo "... Parser/Tree.o"
+	@echo "... Parser/Tree.i"
+	@echo "... Parser/Tree.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

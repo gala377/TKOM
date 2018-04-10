@@ -12,6 +12,20 @@ src/CMakeFiles/Translator.dir/Lexer/Lexer.cpp.o: ../src/Lexer/Lexer.cpp
 src/CMakeFiles/Translator.dir/Lexer/Token.cpp.o: ../include/Lexer/Token.h
 src/CMakeFiles/Translator.dir/Lexer/Token.cpp.o: ../src/Lexer/Token.cpp
 
+src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o: ../include/Parser/Nodes.h
+src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o: ../include/Parser/Tree.h
+src/CMakeFiles/Translator.dir/Parser/Nodes.cpp.o: ../src/Parser/Nodes.cpp
+
+src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o: ../include/Lexer/Lexer.h
+src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o: ../include/Lexer/Token.h
+src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o: ../include/Parser/Nodes.h
+src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o: ../include/Parser/Parser.h
+src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o: ../include/Parser/Tree.h
+src/CMakeFiles/Translator.dir/Parser/Parser.cpp.o: ../src/Parser/Parser.cpp
+
+src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o: ../include/Parser/Tree.h
+src/CMakeFiles/Translator.dir/Parser/Tree.cpp.o: ../src/Parser/Tree.cpp
+
 src/CMakeFiles/Translator.dir/main.cpp.o: ../include/Lexer/Lexer.h
 src/CMakeFiles/Translator.dir/main.cpp.o: ../include/Lexer/Token.h
 src/CMakeFiles/Translator.dir/main.cpp.o: ../src/main.cpp

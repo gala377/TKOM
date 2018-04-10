@@ -14,6 +14,9 @@ a + 34
 a=a+3431/sdfds
 FUNCTION_PARSE_TEST
 
+#Comment {}
+
+
 fn test_func(param_1, param_2) {
     return param_1 + param_2 * 20
 }

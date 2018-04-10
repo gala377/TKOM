@@ -31,7 +31,7 @@ SymbolMap Lexer::_OPERATORS = {
         {"<", TokenIdentifier::Minority},
         {"(", TokenIdentifier::OpenBracket},
         {")", TokenIdentifier::CloseBracket},
-        {"}", TokenIdentifier::OpenCurlyBracker},
+        {"{", TokenIdentifier::OpenCurlyBracker},
         {"}", TokenIdentifier::CloseCurlyBracket},
         {",", TokenIdentifier::Comma},
         {"#", TokenIdentifier::Comment},
@@ -158,7 +158,7 @@ TokenType Lexer::inferTokenTypeByFirstCharacter(const char ch) const {
     // to work a little bit different
     // As it takes const char*
     // So make it work or scrap the idea alltogether 
-    throw std::runtime_error("Uknown character!")
+    throw std::runtime_error("Uknown character!");
     return TokenType::Nil;
 }
 
