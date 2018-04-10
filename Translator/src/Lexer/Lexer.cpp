@@ -45,7 +45,8 @@ Lexer::Lexer() {
             &Lexer::processOperator, this, std::placeholders::_1);
     _token_assemblers[TokenType::Blank] = std::bind(
             &Lexer::processBlankChar, this, std::placeholders::_1);
-
+    _token_assemblers[TokenType::Comment] = std::bind(
+            &Lexer::processComment, this, std::placeholders::_1);
 }
 
 Lexer::~Lexer() {
@@ -147,6 +148,9 @@ TokenType Lexer::inferTokenTypeByFirstCharacter(const char ch) const {
     } else if(isBlank(ch)) {
         std::cout << "Infering ch as blank\n";
         return TokenType::Blank;
+    } else if(isComment(ch)) {
+        std::cout << "Infering ch as comment\n";
+        return TokenType::Comment;
     }
     return TokenType::Nil;
 }
@@ -191,6 +195,11 @@ Token Lexer::processIdentifier(char ch) {
     }
     return newToken(TokenIdentifier::Identifier, symbol);
 
+}
+
+Token Lexer::processComment(char ch) {
+    auto symbol = assembleComment(ch);
+    return newToken(TokenIdentifier::Comment, symbol);
 }
 
 Token Lexer::processOperator(char ch) {
@@ -274,6 +283,23 @@ std::string Lexer::assembleOperator(char current) {
     } while(!eof());
     if (symbol.empty()) {
         throw std::runtime_error("Could not assemble operator");
+    }
+    return symbol;
+}
+
+std::string Lexer::assembleComment(char current) {
+    std::cout << "Assembling Comment\n";
+    std::string symbol;
+    do {
+        if(isNewLine(current)) {
+            _last_read_ch = current;
+            return symbol;
+        }
+        symbol += current;
+        current = getChar(); 
+    } while(!eof());
+    if(symbol.empty()) {
+        throw std::runtime_error("Could not assemble comment");
     }
     return symbol;
 }

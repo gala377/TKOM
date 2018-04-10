@@ -41,3 +41,7 @@ bool Syntax::isBegginingOfTheIdentifier(const char ch)  {
 bool Syntax::isPartOfOperator(const char ch) {
     return (bool)_OPERATORS.count(ch);
 }
+
+bool Syntax::isComment(const char ch) {
+    return ch == '#';
+}

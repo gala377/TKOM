@@ -23,6 +23,7 @@ namespace Syntax {
     bool isAlpha(const char ch);
     bool isBegginingOfTheIdentifier(const char ch);
     bool isPartOfOperator(const char ch);
+    bool isComment(const char ch);
 
 }
 

@@ -61,11 +61,12 @@ namespace Syntax {
         Token processConstExpr(char ch);
         Token processOperator(char ch);
         Token processIdentifier(char ch);
-
+        Token processComment(char ch);
 
         std::string assembleConstExpr(char current);
         std::string assembleOperator(char current);
         std::string assembleIdentifier(char current);
+        std::string assembleComment(char current);
 
         Token newToken(TokenIdentifier id, std::string symbol) const;
 
