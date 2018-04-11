@@ -23,6 +23,7 @@ namespace Parser {
             virtual std::string parse() const = 0;
             virtual std::string repr() const ;
 
+            std::string strWithIntend(const std::size_t intend) const;
         protected:
             Node* _parent;
             std::vector<Node*> _children;

@@ -20,7 +20,7 @@ int main() {
     } while(tok.identifier() != Syntax::TokenIdentifier::Nil) ;
 
     std::cout << "\n\n\n\nRESULTS:\n";
-    for(auto s: stats) {
+    for(const auto& s: stats) {
         std::cout << s;
     }
 

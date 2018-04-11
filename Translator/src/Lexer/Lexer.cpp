@@ -12,7 +12,7 @@ using namespace Syntax;
 
 SymbolMap Lexer::_KEYWORDS = {
         {"fn", TokenIdentifier::Function},
-        {"for", TokenIdentifier::Loop},
+        {"loop", TokenIdentifier::Loop},
         {"if", TokenIdentifier::If},
         {"critical", TokenIdentifier::Critical},
         {"concurrent", TokenIdentifier::Concurrent},
@@ -159,7 +159,6 @@ TokenType Lexer::inferTokenTypeByFirstCharacter(const char ch) const {
     // As it takes const char*
     // So make it work or scrap the idea alltogether 
     throw std::runtime_error("Uknown character!");
-    return TokenType::Nil;
 }
 
 

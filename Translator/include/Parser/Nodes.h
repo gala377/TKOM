@@ -26,6 +26,5 @@ namespace Parser {
         std::string _identifier;
         std::vector<std::string> _args;
     };
-
 }
 #endif //TRANSLATOR_NODES_H

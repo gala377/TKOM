@@ -24,11 +24,12 @@ namespace Parser {
         std::set<std::string> _identifiers;
 
         Tree::Node* parseFunction();
-        Function* assembleFunctionDeclaration();
+
+        Function* parseFunctionDeclaration();
+        std::string parseFunctionIndetifier();
         std::vector<std::string> parseFunctionArguments();
 
-
-        Tree::Node* parseFunctionBodyInstruction();
+        std::vector<Tree::Node*> parseCodeBlock();
     };
 
 }

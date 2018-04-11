@@ -38,6 +38,18 @@ std::string Tree::Node::repr() const {
     return "Empty Node";
 }
 
+std::string Tree::Node::strWithIntend(const std::size_t intend) const {
+    std::string res;
+    for(auto i = 0; i < intend; ++i) {
+        res += "----";
+    }
+    res += repr() + "\n";
+    for(const auto& child : _children) {
+        res += child->strWithIntend(intend+1);
+    }
+    return res;
+}
+
 //
 // Tree implementation
 //
@@ -48,8 +60,9 @@ Tree::Tree(Parser::Tree::Node *root): _root(root), _current(root) {}
 
 
 std::ostream& Tree::operator<<(std::ostream &out) {
-    return out << _root->repr();
+    return out << _root->strWithIntend(0);
 }
+
 
 
 Tree::Node* Tree::getCurrent() {
