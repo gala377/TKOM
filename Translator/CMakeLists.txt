@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -Wall -std=c++17")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -04 -m66 -std=c++17")
 
+set(CMAKE_CXX_COMPILER /usr/bin/g++-7)
+
 include_directories(include)
 add_subdirectory(src)
 

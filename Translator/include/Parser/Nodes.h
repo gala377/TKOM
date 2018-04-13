@@ -27,5 +27,12 @@ namespace Parser {
         std::vector<std::string> _args;
     };
 
+    class Empty : public Tree::Node {
+    public:
+        std::string parse() const;
+        std::string repr() const; 
+    };
+
 }
+
 #endif //TRANSLATOR_NODES_H

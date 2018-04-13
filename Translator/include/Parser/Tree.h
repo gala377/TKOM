@@ -21,7 +21,7 @@ namespace Parser {
             void addChild(Node* child);
 
             virtual std::string parse() const = 0;
-            virtual std::string repr() const ;
+            virtual std::string repr() const;
 
         protected:
             Node* _parent;

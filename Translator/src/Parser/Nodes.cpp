@@ -65,3 +65,11 @@ std::string Function::repr() const {
     );
     return res;
 }
+
+std::string Empty::parse() const {
+    return "";
+}
+
+std::string Empty::repr() const {
+    return "Empty";
+}
