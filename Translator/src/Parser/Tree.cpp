@@ -45,12 +45,10 @@ std::string Tree::Node::strWithIntend(int intend) const {
         res += "----";
     }
     res += repr();
-    std::for_each(
-        _children.begin(),
-        _children.end(),
+    std::for_each(_children.begin(), _children.end(),
         [&res, intend](auto &arg) {
             res += arg->strWithIntend(intend+1);
-        });
+    });
     return res;
 }
 

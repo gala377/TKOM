@@ -18,6 +18,7 @@ int main() {
     std::cout << "Got tree\n";
     std::cout << tree;
 
+    std::cout << tree.getCurrent()->parse();
     return 0;
 }
 

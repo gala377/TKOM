@@ -25,6 +25,9 @@ namespace Parser {
     protected:
         std::string _identifier;
         std::vector<std::string> _args;
+
+        std::string funcPrelude() const ;
+        std::string returnedFunction() const ;
     };
 
     class Empty : public Tree::Node {

@@ -34,14 +34,39 @@ Function::Function(std::string identifier,
                    std::vector<std::string> args) : _identifier(std::move(identifier)), _args(std::move(args)) {};
 
 std::string Function::parse() const {
-    // for now just function, not prelude
-    std::string res = "fn ";
-    res += _identifier;
+    std::string res = funcPrelude();
+    res += "\treturn ";
+    res += returnedFunction();
+    res += "\n}\n";
+    res += "var " + _identifier + " = ";
+    res += "__" + _identifier + "__CONSTRUCTOR__()\n\n";
+    return res;
+}
+
+std::string Function::funcPrelude() const {
+    std::string res = "func ";
+    res += "__" + _identifier + "__CONSTRUCTOR__() {\n";
+    res += "\t// Function prelude\n";
+    return res;
+}
+
+std::string Function::returnedFunction() const {
+    std::string res = "func ";
     res += "(";
-    std::for_each(_args.begin(), _args.end()-1,
-        [&res](auto node) { res += node + ", "; }
-    );
-    res += *_args.end() + " *int64)";
+    if (_args.size())
+    {
+        std::for_each(_args.begin(), (_args.end() - 1),
+                      [&res](auto &node) {
+                          res += node + ", ";
+                      });
+        res += *(_args.end() - 1) + " *int64";
+    }
+    res += ") {\n";
+    std::for_each(_children.begin(), _children.end(),
+                  [&res](auto &arg) {
+                      res += "\t\t" + arg->parse();
+                  });
+    res += "\n\t}";
     // if return then return *int64
     return res;
 }
