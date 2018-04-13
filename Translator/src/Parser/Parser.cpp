@@ -6,14 +6,19 @@
 
 using namespace Parser;
 
-Parser::Parser::Parser(Syntax::Lexer& lexer) : _lexer(lexer) {};
+Parser::Parser::Parser(Syntax::Lexer& lexer) : _lexer(lexer) {
+    auto root = new Document;
+    _tree = Tree(root);
+};
 
 Tree Parser::Parser::parse() {
     Syntax::Token curr;
     _lexer.skip_new_lines = true;
     _lexer.skip_spaces = true;
-    do {
-        curr = _lexer.nextToken();
+    for(auto curr = _lexer.nextToken();
+        curr.type() != Syntax::TokenType::Nil;
+        curr = _lexer.nextToken()) {
+        
         if(curr.type() == Syntax::TokenType::Comment) {
             continue;
         } else if(curr.identifier() == Syntax::TokenIdentifier::Function) {
@@ -22,7 +27,8 @@ Tree Parser::Parser::parse() {
             // TODO - throw custom exception with wrong token info inside
             throw std::runtime_error("Expected comment or function got something else");
         }
-    } while(curr.type() != Syntax::TokenType::Nil);
+    }
+    std::cout << "Returning tree\n";
     return _tree;
 }
 
@@ -55,13 +61,12 @@ Function* Parser::Parser::assembleFunctionDeclaration() {
         throw std::runtime_error("Expected function name");
     }
     args = parseFunctionArguments();
-    _lexer.skip_new_lines = true;
-    _lexer.skip_spaces = true;
     return new Function(identifier, args);
 }
 
 std::vector<std::string> Parser::Parser::parseFunctionArguments() {
     _lexer.skip_spaces = true;
+    _lexer.skip_new_lines = true;
     std::vector<std::string> args;
     if(auto curr = _lexer.nextToken(); curr.identifier() != Syntax::TokenIdentifier::OpenBracket) {
         throw std::runtime_error("Expected open bracket after function declaration!");
@@ -70,6 +75,7 @@ std::vector<std::string> Parser::Parser::parseFunctionArguments() {
         case Syntax::TokenIdentifier::CloseBracket:
         break;
         case Syntax::TokenIdentifier::Identifier:
+        args.push_back(curr.symbol());
         for(curr = _lexer.nextToken();
          curr.identifier() != Syntax::TokenIdentifier::CloseBracket;
          curr = _lexer.nextToken()) {
@@ -90,6 +96,7 @@ std::vector<std::string> Parser::Parser::parseFunctionArguments() {
 
 Tree::Node* Parser::Parser::parseFunctionBodyInstruction() {
     _lexer.skip_spaces = true;
+    _lexer.skip_new_lines = true;
     std::cout << "Skipping function body!\n";
     for (auto curr = _lexer.nextToken();
          curr.identifier() != Syntax::TokenIdentifier::CloseCurlyBracket;

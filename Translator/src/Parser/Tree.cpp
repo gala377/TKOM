@@ -3,6 +3,7 @@
 //
 
 #include <stdexcept>
+#include <algorithm>
 #include "Parser/Tree.h"
 
 using namespace Parser;
@@ -38,18 +39,30 @@ std::string Tree::Node::repr() const {
     return "Empty Node";
 }
 
-//
-// Tree implementation
-//
+std::string Tree::Node::strWithIntend(int intend) const {
+    std::string res;
+    for(int i = 0; i < intend; ++i){
+        res += "----";
+    }
+    res += repr();
+    std::for_each(
+        _children.begin(),
+        _children.end(),
+        [&res, intend](auto &arg) {
+            res += arg->strWithIntend(intend+1);
+        });
+    return res;
+}
 
-Tree::Tree(): _root(nullptr), _current(nullptr) {}
+    //
+    // Tree implementation
+    //
+
+    Tree::Tree() : _root(nullptr), _current(nullptr)
+{
+}
 
 Tree::Tree(Parser::Tree::Node *root): _root(root), _current(root) {}
-
-
-std::ostream& Tree::operator<<(std::ostream &out) {
-    return out << _root->repr();
-}
 
 
 Tree::Node* Tree::getCurrent() {

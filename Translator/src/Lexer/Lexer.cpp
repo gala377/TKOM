@@ -115,7 +115,9 @@ Token Lexer::nextToken() {
 
         auto res = _token_assemblers[token_type](ch);
 
+        //TODO different for spaces and new_lines
         if(skipBlanks() && token_type == TokenType::Blank) {
+            std::cout << "Read blank char - skipping it\n";
             continue;
         }
         return res;

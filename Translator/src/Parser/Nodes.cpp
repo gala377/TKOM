@@ -26,15 +26,7 @@ import "fmt"
 }
 
 std::string Document::repr() const {
-    std::string res = "Document\n";
-    std::for_each(
-            _children.begin(),
-            _children.end(),
-            [&res](auto& arg) {
-                res += "\t" + arg->repr() + "\n";
-            }
-    );
-    return res;
+    return "Document\n";
 }
 
 
@@ -55,14 +47,11 @@ std::string Function::parse() const {
 }
 
 std::string Function::repr() const {
-    std::string res = "Function "+ _identifier +"\n";
-    std::for_each(
-            _children.begin(),
-            _children.end(),
-            [&res](auto& arg) {
-                res += "\t" + arg->repr() + "\n";
-            }
-    );
+    std::string res = "Function "+ _identifier +"(";
+    for(auto arg: _args) {
+        res += arg + ", ";
+    }
+    res += ")\n";
     return res;
 }
 
@@ -71,5 +60,6 @@ std::string Empty::parse() const {
 }
 
 std::string Empty::repr() const {
-    return "Empty";
+    std::cout << "Empty repr call\n";
+    return "Empty\n";
 }
