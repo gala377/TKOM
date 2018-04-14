@@ -1,29 +1,24 @@
 #include <iostream>
+
 #include "Lexer/Lexer.h"
 #include "Lexer/Token.h"
+#include "Parser/Parser.h"
+
 #include <sstream>
 #include <string>
 
 std::string tokenToStr(const Syntax::Token&);
 
 int main() {
-    Syntax::Lexer lex;
-    lex.skip_spaces = false;
-    lex.skip_new_lines = false;
+    Syntax::Lexer lex;;
     lex.loadFile("test.txt");
-    std::vector<std::string> stats;
-    Syntax::Token tok;
-    do {
-        tok = lex.nextToken();
-        std::cout << tokenToStr(tok);
-        stats.push_back(tokenToStr(tok));
-    } while(tok.identifier() != Syntax::TokenIdentifier::Nil) ;
+    Parser::Parser pars(lex);
 
-    std::cout << "\n\n\n\nRESULTS:\n";
-    for(const auto& s: stats) {
-        std::cout << s;
-    }
+    auto tree = pars.parse();
+    std::cout << "Got tree\n";
+    std::cout << tree;
 
+    std::cout << tree.getCurrent()->parse();
     return 0;
 }
 

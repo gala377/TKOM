@@ -21,7 +21,9 @@ namespace Parser {
             void addChild(Node* child);
 
             virtual std::string parse() const = 0;
-            virtual std::string repr() const ;
+            virtual std::string repr() const;
+
+            std::string strWithIntend(int intend) const; 
 
             std::string strWithIntend(const std::size_t intend) const;
         protected:
@@ -31,7 +33,10 @@ namespace Parser {
 
         Tree();
         explicit Tree(Node* root);
-        std::ostream& operator<<(std::ostream& out);
+        friend std::ostream& operator<<(std::ostream& out, Tree& tree) {
+            std::cout << "Wrtiting tree\n";
+            return out << tree._root->strWithIntend(0);
+        }
 
         Node* getCurrent();
         const Node* getCurrent() const;
@@ -52,7 +57,6 @@ namespace Parser {
         Node* _root;
         Node* _current;
     };
-
 }
 
 
