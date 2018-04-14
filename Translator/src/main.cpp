@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "Source.h"
 #include "Lexer/Lexer.h"
 #include "Lexer/Token.h"
 #include "Parser/Parser.h"
@@ -10,8 +11,8 @@
 std::string tokenToStr(const Syntax::Token&);
 
 int main() {
-    Syntax::Lexer lex;;
-    lex.loadFile("test.txt");
+    Source src("test.txt");
+    Syntax::Lexer lex(src);
     Parser::Parser pars(lex);
 
     auto tree = pars.parse();
