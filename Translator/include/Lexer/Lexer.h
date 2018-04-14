@@ -47,6 +47,8 @@ namespace Syntax {
         bool skipNewLines() const;
         bool skipBlanks() const;
 
+        bool skipToken(const Token &token) const;
+
         // Reading methods on file
         // TODO refactor to other class
         char getChar();

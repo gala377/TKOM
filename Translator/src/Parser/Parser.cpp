@@ -15,7 +15,6 @@ Parser::Parser::Parser(Syntax::Lexer& lexer) : _lexer(lexer) {
 };
 
 Tree Parser::Parser::parse() {
-    Syntax::Token curr;
     _lexer.skip_new_lines = true;
     _lexer.skip_spaces = true;
     for(auto curr = _lexer.nextToken();
@@ -36,46 +35,38 @@ Tree Parser::Parser::parse() {
 }
 
 Tree::Node* Parser::Parser::parseFunction() {
-    auto function = assembleFunctionDeclaration();
-    auto curr = _lexer.nextToken();
-    if(curr.type() == Syntax::TokenType::Nil) {
-        throw std::runtime_error("Function body expected got EOF!");
-    }
+    auto function = parseFunctionDeclaration();
     // Make it range loop which adds children
-    function->addChild( parseFunctionBodyInstruction() );
+    function->addChild( parseCodeBlock() );
     return function;
 }
 
-Function* Parser::Parser::assembleFunctionDeclaration() {
-    _lexer.skip_new_lines = false;
-    _lexer.skip_spaces = false;
-    std::string identifier;
-    std::vector<std::string> args;
+Function* Parser::Parser::parseFunctionDeclaration() {
+    auto identifier = parseFunctionIndentifier();
+    auto args = parseFunctionArguments();
+    return new Function(identifier, args);
+}
 
-    //TODO throw this off we can have more than a single space
-    if (auto curr = _lexer.nextToken(); curr.identifier() != Syntax::TokenIdentifier::Space) {
-        throw std::runtime_error("Expected single space");
-    }
+std::string Parser::Parser::parseFunctionIndentifier() {
+    _lexer.skip_spaces = true;
+    _lexer.skip_new_lines = false;
     if (auto curr = _lexer.nextToken(); curr.identifier() == Syntax::TokenIdentifier::Identifier) {
         if(_identifiers.count(curr.symbol())) {
             throw std::runtime_error("Identifier already used!");
         }
         _identifiers.insert(curr.symbol());
-        identifier = curr.symbol();
+        return curr.symbol();
     } else {
         throw std::runtime_error("Expected function name");
     }
-    args = parseFunctionArguments();
-    return new Function(identifier, args);
 }
 
 std::vector<std::string> Parser::Parser::parseFunctionArguments() {
-    auto curr = _lexer.nextToken();
     _lexer.skip_spaces = true;
     _lexer.skip_new_lines = true;
     std::vector<std::string> args;
     if(auto curr = _lexer.nextToken(); curr.identifier() != Syntax::TokenIdentifier::OpenBracket) {
-        throw std::runtime_error("Expected open bracket after function declaration!");
+        throw std::runtime_error("Expected open bracket after function identifier!");
     }
     switch(auto curr = _lexer.nextToken(); curr.identifier()) {
         case Syntax::TokenIdentifier::CloseBracket:
@@ -100,7 +91,7 @@ std::vector<std::string> Parser::Parser::parseFunctionArguments() {
     return args;
 }
 
-Tree::Node* Parser::Parser::parseFunctionBodyInstruction() {
+Tree::Node* Parser::Parser::parseCodeBlock() {
     _lexer.skip_spaces = true;
     _lexer.skip_new_lines = true;
     std::cout << "Skipping function body!\n";

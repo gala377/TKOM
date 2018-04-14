@@ -4,4 +4,4 @@ add_executable(Translator
         Lexer/Token.cpp
         Lexer/Characters.cpp
         Parser/Parser.cpp
-        Parser/Tree.cpp Parser/Nodes.cpp)
+        Parser/Tree.cpp Parser/Nodes.cpp ../include/Source.h Source.cpp)
