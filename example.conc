@@ -1,0 +1,55 @@
+// We have simple functions
+fn func_exmpl() {
+    // print function as in Python3
+    print("Just an example")
+}
+
+// Everything passed by reference
+fn test(a) {
+    // Critical blocks for critical sections
+    critical {
+        a = a + 1
+    }
+}
+
+fn return_in_critical(a) {
+    critical {
+        a = a + 1
+        // We can return in critical as well
+        return a - 1
+    }
+}
+
+fn multiple_critical(a) {
+    print("Starting...")
+    critical {
+        a = a + 1
+    }
+    print("Added...")
+    critical {
+        a = a - 1
+    }
+}
+   
+// Main function is like C
+fn main() {
+    // example function call
+    func_exmpl()
+    // Just one type int, no need for fancy types 
+    let a = 1
+    // concurrent blocks let us
+    // make concurrent computations
+    concurrent {
+        test(a)
+        test(a)
+        test(a)
+    }
+    // concurrent block is sequential
+    // it ends when every computation in it ends
+    print("Expected 4 got %v", a)
+}
+
+1. dodać ifa
+2. dodać fory
+3. dodać wyrażenia + - * / i ()
+4. wyrażenia logiczne < > == 
