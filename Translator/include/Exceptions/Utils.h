@@ -6,6 +6,10 @@
 #define TRANSLATOR_UTILS_H
 
 #include <exception>
+#include <optional>
+
+template <typename T>
+using opt_ref = std::optional<std::reference_wrapper<T>>;
 
 class UnimplementedError : public std::exception {
 

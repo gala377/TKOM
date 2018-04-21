@@ -7,26 +7,16 @@
 using namespace Parser;
 
 
-Scope::Scope(Scope* parent): _parent(parent) {
-}
-
-void Scope::setParent(Scope *parent) {
-    _parent = std::unique_ptr<Scope>(parent);
-}
+Scope::Scope(Scope* parent): _parent(parent) {}
 
 
 Scope& Scope::newSubScope() {
-    auto sub_scope = new Scope(this);
-    return *sub_scope;
+    _children.emplace_back(Scope(this));
+    return _children.back();
 }
 
 void Scope::addIdentifier(Identifier id) {
     _defined_ids.push_back(id);
-}
-
-
-Scope& Parser::Scope::parent() const {
-    return *_parent;
 }
 
 
@@ -36,7 +26,7 @@ const Identifier& Scope::find(std::string symbol) const {
             return id;
         }
     }
-    if(_parent != nullptr) {
+    if(_parent) {
         return _parent->find(symbol);
     }
     throw std::runtime_error("Symbol " + symbol + " is not define in scope");
@@ -48,7 +38,7 @@ bool Scope::isDefined(std::string symbol) const {
             return true;
         }
     }
-    if(_parent != nullptr) {
+    if(_parent) {
         return _parent->isDefined(symbol);
     }
     return false;

@@ -7,8 +7,10 @@
 
 #include <string>
 #include <bits/unique_ptr.h>
+#include <optional>
 
 #include "Lexer/Token.h"
+#include "Exceptions/Utils.h"
 
 namespace Parser {
 
@@ -23,19 +25,17 @@ namespace Parser {
 
     class Scope {
     public:
-        Scope(Scope* parent=nullptr);
+        explicit Scope(Scope* parent = nullptr);
 
         Scope& newSubScope();
 
-        void setParent(Scope *parent);
         void addIdentifier(Identifier id);
 
-        Scope& parent() const;
         const Identifier& find(std::string symbol) const;
-
         bool isDefined(std::string symbol) const;
     private:
-        std::unique_ptr<Scope> _parent;
+        Scope* _parent;
+        std::vector<Scope> _children;
         std::vector<Identifier> _defined_ids;
     };
 }

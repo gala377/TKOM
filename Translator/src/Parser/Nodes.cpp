@@ -7,6 +7,7 @@
 
 using namespace Parser;
 
+
 std::string Document::parse() const {
     std::string res = R"(package main
 
@@ -30,8 +31,28 @@ std::string Document::repr() const {
 }
 
 
+
+Declaration::Declaration(std::string identifier): _identifier(std::move(identifier)) {
+
+}
+
+const std::string& Declaration::identifier() const {
+    return _identifier;
+}
+
+std::string Declaration::parse() const {
+    return _identifier;
+}
+
+std::string Declaration::repr() const {
+    return "Identifier: "+_identifier + "\n";
+}
+
+
+
 Function::Function(std::string identifier,
-                   std::vector<std::string> args) : _identifier(std::move(identifier)), _args(std::move(args)) {};
+                   std::vector<std::string> args) : Declaration(std::move(identifier)),
+                                                    _args(std::move(args)) {};
 
 std::string Function::parse() const {
     std::string res = funcPrelude();
@@ -79,6 +100,22 @@ std::string Function::repr() const {
     return res;
 }
 
+const std::vector<std::string>& Function::args() const {
+    return _args;
+}
+
+
+
+std::string VariableDeclaration::parse() const {
+    return "var " + identifier() + " int64";
+}
+
+std::string VariableDeclaration::repr() const {
+    return "variable " + identifier() +" declaration\n";
+}
+
+
+
 std::string Empty::parse() const {
     return "";
 }
@@ -86,4 +123,30 @@ std::string Empty::parse() const {
 std::string Empty::repr() const {
     std::cout << "Empty repr call\n";
     return "Empty\n";
+}
+
+
+
+
+Assigment::Assigment(Tree::Node* left_side, Tree::Node* right_side) {
+    addChild(left_side);
+    addChild(right_side);
+    _left = left_side;
+    _right = right_side;
+}
+
+std::string Assigment::parse() const {
+    return _left->parse() + " = " + _right->parse();
+}
+
+std::string Assigment::repr() const {
+    return "Assigment\n";
+}
+
+Tree::Node* Assigment::left() {
+    return _left;
+}
+
+Tree::Node* Assigment::right() {
+    return _right;
 }

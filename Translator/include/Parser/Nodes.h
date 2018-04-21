@@ -10,30 +10,65 @@
 namespace Parser {
 
     class Document : public Tree::Node {
-        std::string parse() const;
-        std::string repr() const;
+        std::string parse() const override;
+        std::string repr() const override;
     };
 
-    class Function : public Tree::Node {
+    class Declaration: public Tree::Node {
+    public:
+        Declaration(std::string identifier);
+
+        const std::string& identifier() const;
+
+        std::string parse() const override;
+        std::string repr() const override;
+
+    protected:
+        std::string _identifier;
+    };
+
+    class Function : public Declaration {
     public:
         Function(std::string identifier,
                  std::vector<std::string> args);
 
-        std::string parse() const;
-        std::string repr() const;
+        std::string parse() const override;
+        std::string repr() const override;
 
+        const std::vector<std::string>& args() const;
     protected:
-        std::string _identifier;
         std::vector<std::string> _args;
 
         std::string funcPrelude() const ;
         std::string returnedFunction() const ;
     };
 
-    class Empty : public Tree::Node {
+    class VariableDeclaration: public Declaration {
     public:
+        using Declaration::Declaration;
+
+        std::string parse() const override;
+        std::string repr() const override;
+    };
+
+    class Assigment: public Tree::Node {
+    public:
+        Assigment(Tree::Node* left_side, Tree::Node* right_side);
+
+        std::string parse() const override;
+        std::string repr() const override;
+
+        Tree::Node* left();
+        Tree::Node* right();
+
+    private:
+        Tree::Node* _left;
+        Tree::Node* _right;
+    };
+
+    class Empty : public Tree::Node {
         std::string parse() const;
-        std::string repr() const; 
+        std::string repr() const;
     };
 }
 

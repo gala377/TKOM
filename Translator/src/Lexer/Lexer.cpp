@@ -53,6 +53,8 @@ Lexer::Lexer(Source& src): _src_file(src) {
             &Lexer::processComment, this, std::placeholders::_1);
     _token_assemblers[Token::Type::String] = std::bind(
             &Lexer::processString, this, std::placeholders::_1);
+
+    _context.push({skip_new_lines, skip_spaces});
 }
 
 Lexer::~Lexer() {
@@ -276,6 +278,19 @@ std::string Lexer::assembleString(char current) {
     return symbol;
 }
 
+
+std::pair<bool, bool> Lexer::newContext(bool spaces, bool new_lines) {
+    auto [_last_spaces, _last_new_lines] = _context.top();
+    _context.push({spaces, new_lines});
+    skip_new_lines = new_lines;
+    skip_spaces = spaces;
+    return {_last_spaces, _last_new_lines};
+}
+
+void Lexer::retrieveContext() {
+    _context.pop();
+    std::tie(skip_spaces, skip_new_lines) = _context.top();
+}
 
 Token::Token Lexer::newToken(Token::Identifier id, std::string symbol) const {
     std::cout << "Creating new token: {id: " << int(id) << " sym: " << symbol << "}\n";

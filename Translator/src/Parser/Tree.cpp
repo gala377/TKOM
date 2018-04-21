@@ -30,6 +30,10 @@ void Tree::Node::addChild(Node* child) {
     _children.emplace_back(std::shared_ptr<Node>(child));
 }
 
+void Tree::Node::addChild(std::shared_ptr<Tree::Node> child) {
+    _children.push_back(child);
+}
+
 
 std::string Tree::Node::repr() const {
     return "Empty Node";

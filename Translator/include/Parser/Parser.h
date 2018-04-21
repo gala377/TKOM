@@ -28,6 +28,8 @@ namespace Parser {
         std::vector<std::string> parseFunctionArguments();
 
         std::vector<Tree::Node*> parseCodeBlock(Scope& enveloping_scope);
+
+        Assigment* parseVariableDeclaration(Scope& envelopingScope);
     };
 
 }

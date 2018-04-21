@@ -6,18 +6,15 @@
 
 using namespace Parser;
 
-// TODO ni main function is an error
-// TODO check identifiers
+// TODO no main function is an error
 
-Parser::Parser::Parser(Syntax::Lexer& lexer) : _lexer(lexer) {
+Parser::Parser::Parser(Syntax::Lexer& lexer) : _lexer(lexer), _scope(Scope()) {
     auto root = new Document;
     _tree = Tree(root);
-    _scope = Scope();
 };
 
 Tree Parser::Parser::parse() {
-    _lexer.skip_new_lines = true;
-    _lexer.skip_spaces = true;
+    _lexer.newContext(true, true);
     for(auto curr = _lexer.nextToken();
         curr.type() != Syntax::Token::Type::Nil;
         curr = _lexer.nextToken()) {
@@ -32,6 +29,7 @@ Tree Parser::Parser::parse() {
         }
     }
     std::cout << "Returning tree\n";
+    _lexer.retrieveContext();
     return _tree;
 }
 
@@ -39,6 +37,9 @@ Tree Parser::Parser::parse() {
 Tree::Node* Parser::Parser::parseFunction() {
     auto function = parseFunctionDeclaration();
     auto function_scope = _scope.newSubScope();
+    for(auto arg: function->args()) {
+        function_scope.addIdentifier({arg, Identifier::variable});
+    }
     for(auto child: parseCodeBlock(function_scope)) {
         function->addChild(child);
     }
@@ -52,13 +53,13 @@ Function* Parser::Parser::parseFunctionDeclaration() {
 }
 
 std::string Parser::Parser::parseFunctionIdentifier() {
-    _lexer.skip_spaces = true;
-    _lexer.skip_new_lines = false;
+    _lexer.newContext(true, false);
     if (auto curr = _lexer.nextToken(); curr.identifier() == Syntax::Token::Identifier::Identifier) {
         if(_scope.isDefined(curr.symbol())) {
             throw std::runtime_error("Identifier already used!");
         }
         _scope.addIdentifier({curr.symbol(), Identifier::function});
+        _lexer.retrieveContext();
         return curr.symbol();
     } else {
         throw std::runtime_error("Expected function name");
@@ -66,8 +67,7 @@ std::string Parser::Parser::parseFunctionIdentifier() {
 }
 
 std::vector<std::string> Parser::Parser::parseFunctionArguments() {
-    _lexer.skip_spaces = true;
-    _lexer.skip_new_lines = true;
+    _lexer.newContext(true, true);
     std::vector<std::string> args;
     if(auto curr = _lexer.nextToken(); curr.identifier() != Syntax::Token::Identifier::OpenBracket) {
         throw std::runtime_error("Expected open bracket after function identifier!");
@@ -92,18 +92,51 @@ std::vector<std::string> Parser::Parser::parseFunctionArguments() {
         default:
         throw std::runtime_error("Identifier or ')' expected.");
     }
+    _lexer.retrieveContext();
     return args;
 }
 
 
 std::vector<Tree::Node*> Parser::Parser::parseCodeBlock(Scope& enveloping_scope) {
-    _lexer.skip_spaces = true;
-    _lexer.skip_new_lines = true;
-    std::cout << "Skipping function body!\n";
+    _lexer.newContext(true, true);
+
+    std::vector<Tree::Node*> expressions;
+    auto current_scope = enveloping_scope.newSubScope();
+
     for (auto curr = _lexer.nextToken();
          curr.identifier() != Syntax::Token::Identifier::CloseCurlyBracket;
          curr = _lexer.nextToken()) {
-        std::cout << curr.symbol();
+
+        if(curr.identifier() == Syntax::Token::Identifier::Comment) {
+            continue;
+        } else if(curr.identifier() == Syntax::Token::Identifier::Variable) {
+            expressions.push_back(parseVariableDeclaration(current_scope));
+        }
     }
-    return new Empty();
+
+    _lexer.retrieveContext();
+    return expressions;
+}
+
+Assigment* Parser::Parser::parseVariableDeclaration(Scope& enveloping_scope) {
+    _lexer.newContext(true, false);
+    auto curr = _lexer.nextToken();
+
+    if(curr.identifier() != Syntax::Token::Identifier::Identifier) {
+        throw std::runtime_error("Expected identifier after variable declaration!");
+    }
+    if(enveloping_scope.isDefined(curr.symbol())) {
+        throw std::runtime_error("Symbol already in use!");
+    }
+    enveloping_scope.addIdentifier({curr.symbol(), Identifier::variable});
+    auto left_side = new VariableDeclaration(curr.symbol());
+
+    curr = _lexer.nextToken();
+    if(curr.identifier() != Syntax::Token::Identifier::Assigment) {
+        throw std::runtime_error("Assigments operator expected!");
+    }
+    // TODO parse expression
+
+    _lexer.retrieveContext();
+    return new Assigment(left_side, new Empty());
 }

@@ -11,6 +11,7 @@
 #include <tuple>
 #include <map>
 #include <functional>
+#include <stack>
 
 #include "Source.h"
 #include "Token.h"
@@ -20,6 +21,7 @@ namespace Syntax {
 
     using AssemblersMap = std::map<Token::Type, std::function<Token::Token(char)>>;
     using SymbolMap = const std::map<std::string, Token::Identifier>;
+    using Context = std::stack<std::pair<bool, bool>>;
 
     class Lexer {
     public:
@@ -30,8 +32,12 @@ namespace Syntax {
         ~Lexer();
 
         Token::Token nextToken();
+
+        std::pair<bool, bool> newContext(bool spaces, bool new_lines);
+        void retrieveContext();
     protected:
         AssemblersMap _token_assemblers;
+        Context _context;
 
         static SymbolMap _KEYWORDS;
         static SymbolMap _OPERATORS;
