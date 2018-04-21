@@ -121,7 +121,6 @@ std::string Empty::parse() const {
 }
 
 std::string Empty::repr() const {
-    std::cout << "Empty repr call\n";
     return "Empty\n";
 }
 
@@ -136,7 +135,7 @@ Assigment::Assigment(Tree::Node* left_side, Tree::Node* right_side) {
 }
 
 std::string Assigment::parse() const {
-    return _left->parse() + " = " + _right->parse();
+    return _left->parse() + " = " + _right->parse() + "\n";
 }
 
 std::string Assigment::repr() const {

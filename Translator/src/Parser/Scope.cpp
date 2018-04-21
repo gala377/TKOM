@@ -26,7 +26,7 @@ const Identifier& Scope::find(std::string symbol) const {
             return id;
         }
     }
-    if(_parent) {
+    if(_parent != nullptr) {
         return _parent->find(symbol);
     }
     throw std::runtime_error("Symbol " + symbol + " is not define in scope");
@@ -38,7 +38,7 @@ bool Scope::isDefined(std::string symbol) const {
             return true;
         }
     }
-    if(_parent) {
+    if(_parent != nullptr) {
         return _parent->isDefined(symbol);
     }
     return false;

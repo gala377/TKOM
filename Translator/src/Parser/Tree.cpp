@@ -17,21 +17,17 @@ Tree::Node::Node(): _parent(nullptr) {}
 Tree::Node::Node(Node* parent): _parent(parent) {}
 
 
-const std::shared_ptr<Tree::Node> Tree::Node::getParent() const {
-    return std::shared_ptr<Node>(_parent.get());
+Tree::Node* Tree::Node::getParent() const {
+    return _parent;
 }
 
-const std::vector<std::shared_ptr<Tree::Node>> & Tree::Node::getChildren() {
+const std::vector<std::shared_ptr<Tree::Node>>& Tree::Node::getChildren() {
     return _children;
 }
 
 
 void Tree::Node::addChild(Node* child) {
     _children.emplace_back(std::shared_ptr<Node>(child));
-}
-
-void Tree::Node::addChild(std::shared_ptr<Tree::Node> child) {
-    _children.push_back(child);
 }
 
 
@@ -62,13 +58,13 @@ Tree::Tree() : _root(nullptr), _current(nullptr) {
 Tree::Tree(Parser::Tree::Node *root): _root(root), _current(root) {}
 
 
-const std::shared_ptr<Tree::Node> Tree::getCurrent() const {
+Tree::Node* Tree::getCurrent() const {
     return _current;
 }
 
 
 void Tree::goToRoot() {
-    _current = _root;
+    _current = _root.get();
 }
 
 void Tree::goToParent() {
@@ -79,11 +75,11 @@ void Tree::goToParent() {
 }
 
 void Tree::goToChild(std::size_t n) {
-    _current = _current->getChildren()[n];
+    _current = _current->getChildren()[n].get();
 }
 
 bool Tree::isRoot() {
-    return _current == _root;
+    return _current == _root.get();
 }
 
 bool Tree::isLeaf() {

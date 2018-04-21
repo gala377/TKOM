@@ -30,7 +30,7 @@ Tree Parser::Parser::parse() {
     }
     std::cout << "Returning tree\n";
     _lexer.retrieveContext();
-    return _tree;
+    return std::move(_tree);
 }
 
 
