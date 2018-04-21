@@ -15,9 +15,11 @@
 #include "Source.h"
 #include "Token.h"
 
-using SymbolMap = const std::map<std::string, Syntax::Token::Identifier>;
 
 namespace Syntax {
+
+    using AssemblersMap = std::map<Token::Type, std::function<Token::Token(char)>>;
+    using SymbolMap = const std::map<std::string, Token::Identifier>;
 
     class Lexer {
     public:
@@ -29,7 +31,7 @@ namespace Syntax {
 
         Token::Token nextToken();
     protected:
-        std::map<Token::Type, std::function<Token::Token(char)>> _token_assemblers;
+        AssemblersMap _token_assemblers;
 
         static SymbolMap _KEYWORDS;
         static SymbolMap _OPERATORS;
@@ -48,11 +50,13 @@ namespace Syntax {
         Token::Token processOperator(char ch);
         Token::Token processIdentifier(char ch);
         Token::Token processComment(char ch);
+        Token::Token processString(char ch);
 
         std::string assembleConstExpr(char current);
         std::string assembleOperator(char current);
         std::string assembleIdentifier(char current);
         std::string assembleComment(char current);
+        std::string assembleString(char current);
 
         Token::Token newToken(Token::Identifier id, std::string symbol) const;
 

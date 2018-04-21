@@ -45,3 +45,7 @@ bool Syntax::isPartOfOperator(const char ch) {
 bool Syntax::isComment(const char ch) {
     return ch == '#';
 }
+
+bool Syntax::isString(const char ch) {
+    return ch == '"';
+}

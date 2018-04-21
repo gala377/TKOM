@@ -14,24 +14,20 @@ using namespace Parser;
 
 Tree::Node::Node(): _parent(nullptr) {}
 
-Tree::Node::Node(Tree::Node* parent): _parent(parent) {}
+Tree::Node::Node(Node* parent): _parent(parent) {}
 
 
-Tree::Node* Tree::Node::getParent() {
-    return _parent;
+const std::shared_ptr<Tree::Node> Tree::Node::getParent() const {
+    return std::shared_ptr<Node>(_parent.get());
 }
 
-const Tree::Node* Tree::Node::getParent() const {
-    return _parent;
-}
-
-const std::vector<Tree::Node*>& Tree::Node::getChildren() {
+const std::vector<std::shared_ptr<Tree::Node>> & Tree::Node::getChildren() {
     return _children;
 }
 
 
-void Tree::Node::addChild(Parser::Tree::Node *child) {
-    _children.push_back(child);
+void Tree::Node::addChild(Node* child) {
+    _children.emplace_back(std::shared_ptr<Node>(child));
 }
 
 
@@ -39,9 +35,9 @@ std::string Tree::Node::repr() const {
     return "Empty Node";
 }
 
-std::string Tree::Node::strWithIntend(int intend) const {
+std::string Tree::Node::strWithIntend(const std::size_t intend) const {
     std::string res;
-    for(int i = 0; i < intend; ++i){
+    for(std::size_t i = 0; i < intend; ++i){
         res += "----";
     }
     res += repr();
@@ -52,22 +48,17 @@ std::string Tree::Node::strWithIntend(int intend) const {
     return res;
 }
 
-    //
-    // Tree implementation
-    //
+//
+// Tree implementation
+//
 
-    Tree::Tree() : _root(nullptr), _current(nullptr) {
+Tree::Tree() : _root(nullptr), _current(nullptr) {
 }
 
 Tree::Tree(Parser::Tree::Node *root): _root(root), _current(root) {}
 
 
-
-Tree::Node* Tree::getCurrent() {
-    return _current;
-}
-
-const Tree::Node* Tree::getCurrent() const {
+const std::shared_ptr<Tree::Node> Tree::getCurrent() const {
     return _current;
 }
 

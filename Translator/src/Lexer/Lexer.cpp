@@ -51,6 +51,8 @@ Lexer::Lexer(Source& src): _src_file(src) {
             &Lexer::processBlankChar, this, std::placeholders::_1);
     _token_assemblers[Token::Type::Comment] = std::bind(
             &Lexer::processComment, this, std::placeholders::_1);
+    _token_assemblers[Token::Type::String] = std::bind(
+            &Lexer::processString, this, std::placeholders::_1);
 }
 
 Lexer::~Lexer() {
@@ -94,11 +96,10 @@ Token::Type Lexer::inferTokenTypeByFirstCharacter(const char ch) const {
     } else if(isComment(ch)) {
         std::cout << "Infering ch as comment\n";
         return Token::Type::Comment;
+    } else if(isString(ch)) {
+        std::cout << "Infering ch as string\n";
+        return Token::Type::String;
     }
-    // Todo actualy there is a need for a print function
-    // to work a little bit different
-    // As it takes const char*
-    // So make it work or scrap the idea alltogether 
     throw exception<Error>("Unknown character!");
 }
 
@@ -161,6 +162,11 @@ Token::Token Lexer::processOperator(char ch) {
     return newToken((*_OPERATORS.find(symbol)).second, symbol);
 }
 
+Token::Token Lexer::processString(char ch) {
+    auto symbol = assembleString(ch);
+    return newToken(Token::Identifier::String, symbol);
+}
+
 
 std::string Lexer::assembleConstExpr(char current) {
     std::cout << "Assembling Const Expr:\n";
@@ -221,7 +227,7 @@ std::string Lexer::assembleOperator(char current) {
             _src_file.ungetChar(current);
             return symbol;
         } else {
-            throw exception<Error>(std::string("operator"), std::string({current}));
+            throw exception<ExpectedError>(std::string("operator"), std::string({current}));
         }
         current = _src_file.getChar();
         std::cout << "Read: " << current << "\n";
@@ -246,6 +252,26 @@ std::string Lexer::assembleComment(char current) {
     } while(!_src_file.eof());
     if(symbol.empty()) {
         throw exception<Error>("Could not assemble comment!");
+    }
+    return symbol;
+}
+
+std::string Lexer::assembleString(char current) {
+    std::cout << "Assembling string\n";
+    std::string symbol;
+    do {
+        symbol += current;
+        current = _src_file.getChar();
+        if(isNewLine(current)) {
+            throw exception<UnexpectedError>("new line");
+        }
+        if(isString(current)) {
+            symbol += current;
+            return symbol;
+        }
+    } while(!_src_file.eof());
+    if(symbol.empty()) {
+        throw exception<Error>("Could not assemble string!");
     }
     return symbol;
 }

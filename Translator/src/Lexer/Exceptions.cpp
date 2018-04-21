@@ -8,8 +8,8 @@
 Error::Error(std::uint32_t line,
              std::uint32_t position,
              std::string message): _line(line),
-                                                     _position(position),
-                                                     _message(std::move(message)) {}
+                                   _position(position),
+                                   _message(std::move(message)) {}
 
 const char *Error::what() const noexcept {
     return ("Exception in line: " +
@@ -26,4 +26,10 @@ ExpectedError::ExpectedError(std::uint32_t line,
                              std::string expected,
                              std::string got) : Error(line, position) {
     _message += " expected: " + expected + " got: " + got;
+}
+
+UnexpectedError::UnexpectedError(std::uint32_t line,
+                                 std::uint32_t position,
+                                 std::string symbol) : Error(line, position) {
+    _message += " unexpected symbol " + symbol;
 }

@@ -12,6 +12,7 @@ using namespace Parser;
 Parser::Parser::Parser(Syntax::Lexer& lexer) : _lexer(lexer) {
     auto root = new Document;
     _tree = Tree(root);
+    _scope = Scope();
 };
 
 Tree Parser::Parser::parse() {
@@ -51,10 +52,10 @@ std::string Parser::Parser::parseFunctionIndentifier() {
     _lexer.skip_spaces = true;
     _lexer.skip_new_lines = false;
     if (auto curr = _lexer.nextToken(); curr.identifier() == Syntax::Token::Identifier::Identifier) {
-        if(_identifiers.count(curr.symbol())) {
+        if(_scope.isDefined(curr.symbol())) {
             throw std::runtime_error("Identifier already used!");
         }
-        _identifiers.insert(curr.symbol());
+        _scope.addIdentifier({curr.symbol(), Identifier::function});
         return curr.symbol();
     } else {
         throw std::runtime_error("Expected function name");

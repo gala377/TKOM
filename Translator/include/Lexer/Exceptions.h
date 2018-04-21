@@ -31,4 +31,11 @@ public:
                   std::string got);
 };
 
+class UnexpectedError : public Error {
+public:
+    UnexpectedError(std::uint32_t line,
+                    std::uint32_t position,
+                    std::string symbol);
+};
+
 #endif //TRANSLATOR_EXCEPTIONS_H

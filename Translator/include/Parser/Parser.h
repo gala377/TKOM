@@ -4,24 +4,22 @@
 #include "Lexer/Lexer.h"
 #include "Parser/Tree.h"
 #include "Parser/Nodes.h"
+#include "Parser/Scope.h"
 #include <set>
 
 namespace Parser {
 
     class Parser {
         public:
-
         Parser(Syntax::Lexer& lexer);
 
         Tree parse();
 
         private:
-
         Syntax::Lexer& _lexer;
-        Tree _tree;
 
-        // TODO change to hash set
-        std::set<std::string> _identifiers;
+        Tree _tree;
+        Scope _scope;
 
         Tree::Node* parseFunction();
 

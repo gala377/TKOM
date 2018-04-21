@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <memory>
 
 namespace Parser {
 
@@ -14,32 +15,29 @@ namespace Parser {
             Node();
             Node(Node* parent);
 
-            Node* getParent();
-            const Node* getParent() const;
-            const std::vector<Node*>& getChildren();
+            const std::shared_ptr<Node> getParent() const;
+            const std::vector<std::shared_ptr<Node>>& getChildren();
 
             void addChild(Node* child);
 
             virtual std::string parse() const = 0;
             virtual std::string repr() const;
 
-            std::string strWithIntend(int intend) const; 
-
-            std::string strWithIntend(const std::size_t intend) const;
+            std::string strWithIntend(std::size_t intend) const;
         protected:
-            Node* _parent;
-            std::vector<Node*> _children;
+            std::unique_ptr<Node> _parent;
+            std::vector<std::shared_ptr<Node>> _children;
         };
 
         Tree();
         explicit Tree(Node* root);
+
         friend std::ostream& operator<<(std::ostream& out, Tree& tree) {
             std::cout << "Wrtiting tree\n";
             return out << tree._root->strWithIntend(0);
         }
 
-        Node* getCurrent();
-        const Node* getCurrent() const;
+        const std::shared_ptr<Node> getCurrent() const;
 
         //Tree navigation
         void goToRoot();
@@ -51,11 +49,12 @@ namespace Parser {
         bool isRoot();
     
         //TODO make it an iterator
-        Node* traverse();
+        std::shared_ptr<Node> traverse();
 
     protected:
-        Node* _root;
-        Node* _current;
+        std::shared_ptr<Node> _root;
+        std::shared_ptr<Node> _current;
+
     };
 }
 

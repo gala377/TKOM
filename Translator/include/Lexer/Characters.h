@@ -10,7 +10,7 @@
 namespace Syntax {
 
     static const std::set<char> _OPERATORS = {
-            '=', '/', '\"', '(', ')',
+            '=', '/', '(', ')',
             '{', '}', '+', '-', '*',
             '<', '>', ',',
     };
@@ -24,7 +24,7 @@ namespace Syntax {
     bool isBegginingOfTheIdentifier(const char ch);
     bool isPartOfOperator(const char ch);
     bool isComment(const char ch);
-
+    bool isString(const char ch);
 }
 
 

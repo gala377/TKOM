@@ -13,7 +13,7 @@ namespace Syntax::Token {
 
     enum class Type {
         Nil, Identifier, Keyword, Operator,
-        ConstExpr, Comment, Blank,
+        ConstExpr, String, Comment, Blank,
     };
 
     enum class Identifier {
@@ -37,7 +37,7 @@ namespace Syntax::Token {
         Minority, Comma,
 
         //Other
-        Space=24, NewLine,
+        Space=24, NewLine, String
 
     };
 

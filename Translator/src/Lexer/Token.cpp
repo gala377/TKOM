@@ -39,6 +39,7 @@ const std::map<Identifier, Type> Token::_ID_TO_TYPE = {
         {Identifier::NewLine,              Type::Blank},
 
         {Identifier::Comment,              Type::Comment},
+        {Identifier::String,               Type::String},
 };
 
 
