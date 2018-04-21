@@ -1,0 +1,25 @@
+{
+    "name": "tkom",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": ">=0.9.0-pre.1"
+    },
+    "publisher": "me",
+    "contributes": {
+        "languages": [{
+            "id": "tkom",
+            "aliases": ["TKOM", "tkom"],
+            "extensions": [".tkom",".conc"]
+        }],
+        "grammars": [{
+            "language": "tkom",
+            "scopeName": "source.tkom",
+            "path": "./syntaxes/tkom.tmLanguage"
+        }],
+        "themes": [{
+            "label": "tkom-lang",
+            "uiTheme": "vs-dark",
+            "path": "./themes/tkom.tmTheme"
+        }]
+    }
+}
