@@ -35,20 +35,23 @@ Tree Parser::Parser::parse() {
     return _tree;
 }
 
+
 Tree::Node* Parser::Parser::parseFunction() {
     auto function = parseFunctionDeclaration();
-    // Make it range loop which adds children
-    function->addChild( parseCodeBlock() );
+    auto function_scope = _scope.newSubScope();
+    for(auto child: parseCodeBlock(function_scope)) {
+        function->addChild(child);
+    }
     return function;
 }
 
 Function* Parser::Parser::parseFunctionDeclaration() {
-    auto identifier = parseFunctionIndentifier();
+    auto identifier = parseFunctionIdentifier();
     auto args = parseFunctionArguments();
     return new Function(identifier, args);
 }
 
-std::string Parser::Parser::parseFunctionIndentifier() {
+std::string Parser::Parser::parseFunctionIdentifier() {
     _lexer.skip_spaces = true;
     _lexer.skip_new_lines = false;
     if (auto curr = _lexer.nextToken(); curr.identifier() == Syntax::Token::Identifier::Identifier) {
@@ -92,7 +95,8 @@ std::vector<std::string> Parser::Parser::parseFunctionArguments() {
     return args;
 }
 
-Tree::Node* Parser::Parser::parseCodeBlock() {
+
+std::vector<Tree::Node*> Parser::Parser::parseCodeBlock(Scope& enveloping_scope) {
     _lexer.skip_spaces = true;
     _lexer.skip_new_lines = true;
     std::cout << "Skipping function body!\n";

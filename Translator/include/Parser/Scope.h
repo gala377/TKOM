@@ -25,6 +25,8 @@ namespace Parser {
     public:
         Scope(Scope* parent=nullptr);
 
+        Scope& newSubScope();
+
         void setParent(Scope *parent);
         void addIdentifier(Identifier id);
 

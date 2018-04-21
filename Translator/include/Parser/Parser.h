@@ -24,10 +24,10 @@ namespace Parser {
         Tree::Node* parseFunction();
 
         Function* parseFunctionDeclaration();
-        std::string parseFunctionIndentifier();
+        std::string parseFunctionIdentifier();
         std::vector<std::string> parseFunctionArguments();
 
-        Tree::Node* parseCodeBlock();
+        std::vector<Tree::Node*> parseCodeBlock(Scope& enveloping_scope);
     };
 
 }

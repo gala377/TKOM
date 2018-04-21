@@ -15,6 +15,11 @@ void Scope::setParent(Scope *parent) {
 }
 
 
+Scope& Scope::newSubScope() {
+    auto sub_scope = new Scope(this);
+    return *sub_scope;
+}
+
 void Scope::addIdentifier(Identifier id) {
     _defined_ids.push_back(id);
 }
