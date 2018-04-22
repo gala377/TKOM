@@ -21,15 +21,15 @@ namespace Parser {
         Tree _tree;
         Scope _scope;
 
-        Tree::Node* parseFunction();
+        std::shared_ptr<Tree::Node> parseFunction();
 
-        Function* parseFunctionDeclaration();
+        std::shared_ptr<FunctionDeclaration> parseFunctionDeclaration();
         std::string parseFunctionIdentifier();
         std::vector<std::string> parseFunctionArguments();
 
-        std::vector<Tree::Node*> parseCodeBlock(Scope& enveloping_scope);
+        std::vector<std::shared_ptr<Tree::Node>> parseCodeBlock(Scope& enveloping_scope);
 
-        Assigment* parseVariableDeclaration(Scope& envelopingScope);
+        std::shared_ptr<Expression> parseVariableDeclaration(Scope& envelopingScope);
     };
 
 }

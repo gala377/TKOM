@@ -14,22 +14,24 @@ namespace Parser {
         std::string repr() const override;
     };
 
-    class Declaration: public Tree::Node {
-    public:
-        Declaration(std::string identifier);
 
-        const std::string& identifier() const;
+    class Symbol: public virtual Tree::Node {
+    public:
+        Symbol(std::string symbol);
 
         std::string parse() const override;
         std::string repr() const override;
 
+        const std::string& symbol() const;
+
     protected:
-        std::string _identifier;
+        std::string _symbol;
     };
 
-    class Function : public Declaration {
+
+    class FunctionDeclaration : public Symbol {
     public:
-        Function(std::string identifier,
+        FunctionDeclaration(std::string identifier,
                  std::vector<std::string> args);
 
         std::string parse() const override;
@@ -43,17 +45,22 @@ namespace Parser {
         std::string returnedFunction() const ;
     };
 
-    class VariableDeclaration: public Declaration {
+
+    class VariableDeclaration: public Symbol {
     public:
-        using Declaration::Declaration;
+        using Symbol::Symbol;
 
         std::string parse() const override;
         std::string repr() const override;
     };
 
-    class Assigment: public Tree::Node {
+
+    class Expression: public virtual Tree::Node {
     public:
-        Assigment(Tree::Node* left_side, Tree::Node* right_side);
+        Expression(Tree::Node* left_side, Tree::Node* right_side, std::string root_operator);
+        Expression(std::shared_ptr<Node> left_side,
+                   std::shared_ptr<Node> right_side,
+                   std::string root_operator);
 
         std::string parse() const override;
         std::string repr() const override;
@@ -61,10 +68,48 @@ namespace Parser {
         Tree::Node* left();
         Tree::Node* right();
 
-    private:
+    protected:
         Tree::Node* _left;
         Tree::Node* _right;
+
+        std::string _operator;
     };
+
+
+    class ConstExpr: public Symbol, Expression {
+    public:
+        ConstExpr(std::string symbol);
+
+        std::string parse() const override;
+        std::string repr() const override;
+    };
+
+    class Assignment: public Expression {
+    public:
+        Assignment(Tree::Node* left_side, Tree::Node* right_side);
+        Assignment(std::shared_ptr<Tree::Node> left_side,
+                   std::shared_ptr<Tree::Node> right_side);
+
+        std::string repr() const override;
+    };
+
+    class VariableCall:  public VariableDeclaration {
+    public:
+        using VariableDeclaration::Symbol;
+
+        std::string parse() const override;
+        std::string repr() const override;
+    };
+
+
+    class FunctionCall: public FunctionDeclaration {
+    public:
+        using FunctionDeclaration::FunctionDeclaration;
+
+        std::string parse() const override;
+        std::string repr() const override;
+    };
+
 
     class Empty : public Tree::Node {
         std::string parse() const;

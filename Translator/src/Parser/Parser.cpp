@@ -34,7 +34,7 @@ Tree Parser::Parser::parse() {
 }
 
 
-Tree::Node* Parser::Parser::parseFunction() {
+std::shared_ptr<Tree::Node> Parser::Parser::parseFunction() {
     auto function = parseFunctionDeclaration();
     auto function_scope = _scope.newSubScope();
     for(auto arg: function->args()) {
@@ -46,10 +46,11 @@ Tree::Node* Parser::Parser::parseFunction() {
     return function;
 }
 
-Function* Parser::Parser::parseFunctionDeclaration() {
+std::shared_ptr<FunctionDeclaration> Parser::Parser::parseFunctionDeclaration() {
     auto identifier = parseFunctionIdentifier();
     auto args = parseFunctionArguments();
-    return new Function(identifier, args);
+    return std::shared_ptr<FunctionDeclaration>(
+            new FunctionDeclaration(identifier, args));
 }
 
 std::string Parser::Parser::parseFunctionIdentifier() {
@@ -68,7 +69,7 @@ std::string Parser::Parser::parseFunctionIdentifier() {
 
 std::vector<std::string> Parser::Parser::parseFunctionArguments() {
     _lexer.newContext(true, true);
-    std::vector<std::string> args;
+    std::vector<std::string> args = {};
     if(auto curr = _lexer.nextToken(); curr.identifier() != Syntax::Token::Identifier::OpenBracket) {
         throw std::runtime_error("Expected open bracket after function identifier!");
     }
@@ -97,10 +98,10 @@ std::vector<std::string> Parser::Parser::parseFunctionArguments() {
 }
 
 
-std::vector<Tree::Node*> Parser::Parser::parseCodeBlock(Scope& enveloping_scope) {
+std::vector<std::shared_ptr<Tree::Node>> Parser::Parser::parseCodeBlock(Scope& enveloping_scope) {
     _lexer.newContext(true, true);
 
-    std::vector<Tree::Node*> expressions;
+    std::vector<std::shared_ptr<Tree::Node>> expressions;
     auto current_scope = enveloping_scope.newSubScope();
 
     for (auto curr = _lexer.nextToken();
@@ -110,7 +111,7 @@ std::vector<Tree::Node*> Parser::Parser::parseCodeBlock(Scope& enveloping_scope)
         if(curr.identifier() == Syntax::Token::Identifier::Comment) {
             continue;
         } else if(curr.identifier() == Syntax::Token::Identifier::Variable) {
-            expressions.push_back(parseVariableDeclaration(current_scope));
+            expressions.emplace_back(parseVariableDeclaration(current_scope));
         }
     }
 
@@ -118,7 +119,7 @@ std::vector<Tree::Node*> Parser::Parser::parseCodeBlock(Scope& enveloping_scope)
     return expressions;
 }
 
-Assigment* Parser::Parser::parseVariableDeclaration(Scope& enveloping_scope) {
+std::shared_ptr<Expression> Parser::Parser::parseVariableDeclaration(Scope& enveloping_scope) {
     _lexer.newContext(true, false);
     auto curr = _lexer.nextToken();
 
@@ -129,7 +130,8 @@ Assigment* Parser::Parser::parseVariableDeclaration(Scope& enveloping_scope) {
         throw std::runtime_error("Symbol already in use!");
     }
     enveloping_scope.addIdentifier({curr.symbol(), Identifier::variable});
-    auto left_side = new VariableDeclaration(curr.symbol());
+    auto left_side = std::shared_ptr<VariableDeclaration>(
+            new VariableDeclaration(curr.symbol()));
 
     curr = _lexer.nextToken();
     if(curr.identifier() != Syntax::Token::Identifier::Assigment) {
@@ -138,5 +140,8 @@ Assigment* Parser::Parser::parseVariableDeclaration(Scope& enveloping_scope) {
     // TODO parse expression
 
     _lexer.retrieveContext();
-    return new Assigment(left_side, new Empty());
+    // VVVVV make it shared ptr
+    return std::shared_ptr<Assignment>(new Assignment(
+            left_side,
+            std::shared_ptr<Empty>(new Empty())));
 }

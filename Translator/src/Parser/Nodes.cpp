@@ -32,46 +32,44 @@ std::string Document::repr() const {
 
 
 
-Declaration::Declaration(std::string identifier): _identifier(std::move(identifier)) {
+Symbol::Symbol(std::string symbol): _symbol(std::move(symbol)) {}
 
+std::string Symbol::parse() const {
+    return _symbol;
 }
 
-const std::string& Declaration::identifier() const {
-    return _identifier;
+std::string Symbol::repr() const {
+    return "Symbol " + _symbol + "\n";
 }
 
-std::string Declaration::parse() const {
-    return _identifier;
-}
-
-std::string Declaration::repr() const {
-    return "Identifier: "+_identifier + "\n";
+const std::string& Symbol::symbol() const{
+    return _symbol;
 }
 
 
 
-Function::Function(std::string identifier,
-                   std::vector<std::string> args) : Declaration(std::move(identifier)),
+FunctionDeclaration::FunctionDeclaration(std::string identifier,
+                   std::vector<std::string> args) : Symbol(std::move(identifier)),
                                                     _args(std::move(args)) {};
 
-std::string Function::parse() const {
+std::string FunctionDeclaration::parse() const {
     std::string res = funcPrelude();
     res += "\treturn ";
     res += returnedFunction();
     res += "\n}\n";
-    res += "var " + _identifier + " = ";
-    res += "__" + _identifier + "__CONSTRUCTOR__()\n\n";
+    res += "var " + _symbol + " = ";
+    res += "__" + _symbol + "__CONSTRUCTOR__()\n\n";
     return res;
 }
 
-std::string Function::funcPrelude() const {
+std::string FunctionDeclaration::funcPrelude() const {
     std::string res = "func ";
-    res += "__" + _identifier + "__CONSTRUCTOR__() {\n";
+    res += "__" + _symbol + "__CONSTRUCTOR__() {\n";
     res += "\t// Function prelude\n";
     return res;
 }
 
-std::string Function::returnedFunction() const {
+std::string FunctionDeclaration::returnedFunction() const {
     std::string res = "func ";
     res += "(";
     if (!_args.empty()) {
@@ -91,8 +89,8 @@ std::string Function::returnedFunction() const {
     return res;
 }
 
-std::string Function::repr() const {
-    std::string res = "Function "+ _identifier +"(";
+std::string FunctionDeclaration::repr() const {
+    std::string res = "FunctionDeclaration "+ _symbol +"(";
     for(const auto& arg: _args) {
         res += arg + ", ";
     }
@@ -100,19 +98,21 @@ std::string Function::repr() const {
     return res;
 }
 
-const std::vector<std::string>& Function::args() const {
+const std::vector<std::string>& FunctionDeclaration::args() const {
     return _args;
 }
 
 
 
+
 std::string VariableDeclaration::parse() const {
-    return "var " + identifier() + " int64";
+    return "var " + _symbol + " int64";
 }
 
 std::string VariableDeclaration::repr() const {
-    return "variable " + identifier() +" declaration\n";
+    return "variable " + _symbol +" declaration\n";
 }
+
 
 
 
@@ -125,27 +125,92 @@ std::string Empty::repr() const {
 }
 
 
-
-
-Assigment::Assigment(Tree::Node* left_side, Tree::Node* right_side) {
+Expression::Expression(std::shared_ptr<Tree::Node> left_side,
+                       std::shared_ptr<Tree::Node> right_side,
+                       std::string root_operator): _left(left_side.get()),
+                                                   _right(right_side.get()),
+                                                   _operator(std::move(root_operator)) {
     addChild(left_side);
     addChild(right_side);
-    _left = left_side;
-    _right = right_side;
 }
 
-std::string Assigment::parse() const {
-    return _left->parse() + " = " + _right->parse() + "\n";
+Expression::Expression(Tree::Node* left_side,
+                       Tree::Node* right_side,
+                       std::string root_operator): Expression(
+                               std::shared_ptr<Tree::Node>(left_side),
+                               std::shared_ptr<Tree::Node>(right_side),
+                               std::move(root_operator)) {}
+
+std::string Expression::parse() const {
+    return _left->parse() + " " + _operator + " "+ _right->parse() + "\n";
 }
 
-std::string Assigment::repr() const {
-    return "Assigment\n";
+std::string Expression::repr() const {
+    return "Expression\n";
 }
 
-Tree::Node* Assigment::left() {
+Tree::Node* Expression::left() {
     return _left;
 }
 
-Tree::Node* Assigment::right() {
+Tree::Node* Expression::right() {
     return _right;
 }
+
+
+Assignment::Assignment(std::shared_ptr<Tree::Node> left_side,
+                       std::shared_ptr<Tree::Node> right_side): Expression(
+                               std::move(right_side),
+                               std::move(left_side),
+                               "=") {}
+
+Assignment::Assignment(Tree::Node* left_side, Tree::Node* right_side): Expression(left_side,
+                                                                                right_side,
+                                                                                "=") { }
+
+std::string Assignment::repr() const {
+    return "Assignment\n";
+}
+
+
+
+std::string VariableCall::parse() const {
+    return symbol();
+}
+
+std::string VariableCall::repr() const {
+    return "Call var " + symbol();
+}
+
+
+
+std::string FunctionCall::parse() const {
+    std::string res = "func ";
+    res += "(";
+    if (!_args.empty()) {
+        std::for_each(_args.begin(), (_args.end() - 1),
+                      [&res](auto &node) {
+                          res += node + ", ";
+                      });
+        res += *(_args.end() - 1) + " *int64";
+    }
+    res += ")";
+    return res;
+}
+
+std::string FunctionCall::repr() const {
+    return "call " + FunctionDeclaration::repr();
+}
+
+
+ConstExpr::ConstExpr(std::string symbol):
+        Symbol(std::move(symbol)), Expression(this, new Empty(), "") {}
+
+std::string ConstExpr::parse() const {
+    return "Constexpr " + Symbol::parse();
+}
+
+std::string ConstExpr::repr() const {
+    return "ConstExpr " + _symbol + "\n";
+}
+

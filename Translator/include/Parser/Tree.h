@@ -19,6 +19,7 @@ namespace Parser {
             const std::vector<std::shared_ptr<Node>>& getChildren();
 
             void addChild(Node* child);
+            void addChild(std::shared_ptr<Node> child);
 
             virtual std::string parse() const = 0;
             virtual std::string repr() const;

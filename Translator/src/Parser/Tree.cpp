@@ -27,9 +27,14 @@ const std::vector<std::shared_ptr<Tree::Node>>& Tree::Node::getChildren() {
 
 
 void Tree::Node::addChild(Node* child) {
+    child->_parent = this;
     _children.emplace_back(std::shared_ptr<Node>(child));
 }
 
+void Tree::Node::addChild(std::shared_ptr<Tree::Node> child) {
+    child->_parent = this;
+    _children.push_back(child);
+}
 
 std::string Tree::Node::repr() const {
     return "Empty Node";
