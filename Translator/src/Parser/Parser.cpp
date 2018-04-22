@@ -135,13 +135,98 @@ std::shared_ptr<Expression> Parser::Parser::parseVariableDeclaration(Scope& enve
 
     curr = _lexer.nextToken();
     if(curr.identifier() != Syntax::Token::Identifier::Assigment) {
-        throw std::runtime_error("Assigments operator expected!");
+        throw std::runtime_error("Assignments operator expected!");
     }
-    // TODO parse expression
+
+    auto right_side = parseExpression(enveloping_scope);
 
     _lexer.retrieveContext();
-    // VVVVV make it shared ptr
-    return std::shared_ptr<Assignment>(new Assignment(
-            left_side,
-            std::shared_ptr<Empty>(new Empty())));
+    return std::make_shared<Assignment>(left_side, right_side);
 }
+
+std::shared_ptr<Expression> Parser::Parser::parseExpression(Scope& enveloping_scope) {
+    _lexer.newContext(true, false);
+    std::shared_ptr<Expression> left_side, right_side;
+    std::string expr_operator = "";
+
+    log("Parsing expr");
+    left_side = parseLeftSideOfExpr(enveloping_scope);
+    // todo no -2314 for now supported
+    // let a = -32432 <- wont be supported for now
+    log("Left side parsed ", left_side->repr());
+    auto curr = _lexer.nextToken();
+    if(curr.identifier() == Syntax::Token::Identifier::NewLine) {
+        right_side = std::make_shared<Empty>();
+        log("New line - right side is empty");
+    } else if(curr.type() != Syntax::Token::Type::Operator) {
+        throw std::runtime_error("Operator expected!");
+    } else {
+        log("Parsing right side");
+        expr_operator = curr.symbol();
+        log("Operator is ", expr_operator);
+        // TODO check if symbol is valid in this context
+        // + - * /
+        right_side = parseExpression(enveloping_scope);
+        log("Right side parsed ", right_side->repr());
+    }
+
+
+    _lexer.retrieveContext();
+    return std::make_shared<Expression>(left_side, right_side, expr_operator);
+}
+
+std::shared_ptr<Expression> Parser::Parser::parseBracketExpression(Scope& enveloping_scope) {
+    _lexer.newContext(true, false);
+
+    std::shared_ptr<Expression> left_side, right_side;
+    std::string expr_operator = "";
+
+    log("Parsing in bracket expr");
+
+    left_side = parseLeftSideOfExpr(enveloping_scope);
+    log("Left side parsed ", left_side->repr());
+    auto curr = _lexer.nextToken();
+    if(curr.identifier() == Syntax::Token::Identifier::NewLine) {
+        throw std::runtime_error("Bracket not closed!");
+    } else if(curr.type() != Syntax::Token::Type::Operator) {
+        throw std::runtime_error("Operator expected");
+    } else if(curr.identifier() == Syntax::Token::Identifier::CloseBracket) {
+        right_side = std::make_shared<Empty>();
+        log(") encauntered - right side is empty");
+    } else {
+        expr_operator = curr.symbol();
+        // check if symbol is valid in this context
+        // + - * /
+        log("Operator found: ", expr_operator);
+        right_side = parseExpression(enveloping_scope);
+        log("Right side parsed ", right_side->repr());
+    }
+
+    _lexer.retrieveContext();
+    return std::make_shared<InBracketExpr>(
+            std::make_shared<Expression>(left_side, right_side, expr_operator));
+}
+
+
+std::shared_ptr<Expression> Parser::Parser::parseLeftSideOfExpr(Scope& enveloping_scope) {
+    _lexer.newContext(true, false);
+    std::shared_ptr<Expression> left_side;
+
+    log("Parsing left side of the expr");
+    auto curr = _lexer.nextToken();
+    if(curr.identifier() == Syntax::Token::Identifier::OpenBracket) {
+        left_side = parseBracketExpression(enveloping_scope);
+    } else if(curr.identifier() == Syntax::Token::Identifier::ConstExpr) {
+        left_side = std::make_shared<ConstExpr>(curr.symbol());
+        log("Const expr ", left_side->repr());
+    } else if(curr.identifier() == Syntax::Token::Identifier::Identifier) {
+        //parse identifier
+        throw std::runtime_error("Identifiers not supported yet");
+    } else {
+        throw std::runtime_error("Unsupported syntax in expression");
+    }
+
+    _lexer.retrieveContext();
+    return left_side;
+}
+

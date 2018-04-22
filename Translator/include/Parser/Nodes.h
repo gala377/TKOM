@@ -57,6 +57,9 @@ namespace Parser {
 
     class Expression: public virtual Tree::Node {
     public:
+        // The one below is unsafe and should be used with caution
+        // Look at Empty definition
+        Expression();
         Expression(Tree::Node* left_side, Tree::Node* right_side, std::string root_operator);
         Expression(std::shared_ptr<Node> left_side,
                    std::shared_ptr<Node> right_side,
@@ -76,13 +79,27 @@ namespace Parser {
     };
 
 
-    class ConstExpr: public Symbol, Expression {
+    class ConstExpr: public Expression, Symbol {
     public:
         ConstExpr(std::string symbol);
 
         std::string parse() const override;
         std::string repr() const override;
     };
+
+
+    class InBracketExpr: public Expression {
+    public:
+        explicit InBracketExpr(std::shared_ptr<Expression> expr);
+
+        std::string parse() const override;
+        std::string repr() const override;
+
+        std::shared_ptr<Expression> expr() const;
+    protected:
+        std::shared_ptr<Expression> _expr;
+    };
+
 
     class Assignment: public Expression {
     public:
@@ -92,6 +109,7 @@ namespace Parser {
 
         std::string repr() const override;
     };
+
 
     class VariableCall:  public VariableDeclaration {
     public:
@@ -111,7 +129,10 @@ namespace Parser {
     };
 
 
-    class Empty : public Tree::Node {
+    class Empty : public Expression {
+    public:
+        Empty();
+
         std::string parse() const;
         std::string repr() const;
     };

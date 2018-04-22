@@ -114,7 +114,7 @@ std::string VariableDeclaration::repr() const {
 }
 
 
-
+Empty::Empty(): Expression() {}
 
 std::string Empty::parse() const {
     return "";
@@ -124,6 +124,9 @@ std::string Empty::repr() const {
     return "Empty\n";
 }
 
+
+Expression::Expression(): _left(nullptr), _right(nullptr) {
+}
 
 Expression::Expression(std::shared_ptr<Tree::Node> left_side,
                        std::shared_ptr<Tree::Node> right_side,
@@ -156,6 +159,25 @@ Tree::Node* Expression::left() {
 Tree::Node* Expression::right() {
     return _right;
 }
+
+
+InBracketExpr::InBracketExpr(std::shared_ptr<Expression> expr): Expression(
+        std::move(expr),
+        std::make_shared<Empty>(),
+        "") {}
+
+std::string InBracketExpr::parse() const {
+    return "(" + Expression::parse() + ")";
+}
+
+std::string InBracketExpr::repr() const {
+    return "Brackets ()";
+}
+
+std::shared_ptr<Expression> InBracketExpr::expr() const {
+    return _expr;
+}
+
 
 
 Assignment::Assignment(std::shared_ptr<Tree::Node> left_side,
@@ -204,10 +226,10 @@ std::string FunctionCall::repr() const {
 
 
 ConstExpr::ConstExpr(std::string symbol):
-        Symbol(std::move(symbol)), Expression(this, new Empty(), "") {}
+        Expression(this, new Empty(), ""), Symbol(std::move(symbol)) {}
 
 std::string ConstExpr::parse() const {
-    return "Constexpr " + Symbol::parse();
+    return Symbol::parse();
 }
 
 std::string ConstExpr::repr() const {

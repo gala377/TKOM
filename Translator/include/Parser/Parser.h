@@ -27,10 +27,23 @@ namespace Parser {
         std::string parseFunctionIdentifier();
         std::vector<std::string> parseFunctionArguments();
 
+
         std::vector<std::shared_ptr<Tree::Node>> parseCodeBlock(Scope& enveloping_scope);
 
-        std::shared_ptr<Expression> parseVariableDeclaration(Scope& envelopingScope);
+        std::shared_ptr<Expression> parseVariableDeclaration(Scope& enveloping_scope);
+        std::shared_ptr<Expression> parseExpression(Scope& enveloping_scope);
+        std::shared_ptr<Expression> parseBracketExpression(Scope& enveloping_scope);
+
+        std::shared_ptr<Expression> parseLeftSideOfExpr(Scope& enveloping_scope);
+
+        template <class ...Args>
+        void log(Args&&... args) {
+            std::cout << "[Parser]: ";
+            (std::cout <<  ... << args) << "\n";
+        }
     };
+
+
 
 }
 

@@ -52,22 +52,22 @@ char Source::getNextChar() {
     if(_last_read_ch) {
         ch = _last_read_ch;
         _last_read_ch = '\0';
-        std::cout << "Starting from last ch: " << ch << "\n";
+        // std::cout << "Starting from last ch: " << ch << "\n";
     } else {
         ch = getChar();
-        std::cout << "Read new char: " << ch << "\n";
+        // std::cout << "Read new char: " << ch << "\n";
     }
     return ch;
 }
 
 char Source::getNextNonBlankChar() {
-    std::cout << "Skipping spaces: ";
+    // std::cout << "Skipping spaces: ";
     auto ch = getChar();
     while (Syntax::isBlank(ch)) {
-        std::cout << ".";
+        // std::cout << ".";
         ch = getChar();
     }
-    std::cout << "\nRead: " << ch << "\n";
+    // std::cout << "\nRead: " << ch << "\n";
     return ch;
 }
 
