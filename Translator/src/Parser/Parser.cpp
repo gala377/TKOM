@@ -133,7 +133,7 @@ std::shared_ptr<Expression> Parser::Parser::parseVariableDeclaration(Scope& enve
     auto left_side = std::make_shared<VariableDeclaration>(curr.symbol());
 
     curr = _lexer.nextToken();
-    if(curr.identifier() != Syntax::Token::Identifier::Assigment) {
+    if(curr.identifier() != Syntax::Token::Identifier::Assignment) {
         throw std::runtime_error("Assignments operator expected!");
     }
 

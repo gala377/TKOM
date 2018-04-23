@@ -19,10 +19,11 @@ const std::map<Identifier, Type> Token::_ID_TO_TYPE = {
         {Identifier::Addition,             Type::Operator},
         {Identifier::Multiplication,       Type::Operator},
         {Identifier::Division,             Type::Operator},
-        {Identifier::Assigment,            Type::Operator},
+        {Identifier::Assignment,            Type::Operator},
         {Identifier::Greatness,            Type::Operator},
         {Identifier::Minority,             Type::Operator},
         {Identifier::Comma,                Type::Operator},
+        {Identifier::Minus,                Type::Operator},
 
         {Identifier::Function,             Type::Keyword},
         {Identifier::Loop,                 Type::Keyword},

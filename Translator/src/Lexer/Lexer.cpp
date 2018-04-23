@@ -16,6 +16,7 @@ SymbolMap Lexer::_KEYWORDS = {
         {"fn", Token::Identifier::Function},
         {"loop", Token::Identifier::Loop},
         {"if", Token::Identifier::If},
+        {"else", Token::Identifier::Else},
         {"critical", Token::Identifier::Critical},
         {"concurrent", Token::Identifier::Concurrent},
         {"let", Token::Identifier::Variable},
@@ -28,7 +29,7 @@ SymbolMap Lexer::_OPERATORS = {
         {"+", Token::Identifier::Addition},
         {"*", Token::Identifier::Multiplication},
         {"/", Token::Identifier::Division},
-        {"=", Token::Identifier::Assigment},
+        {"=", Token::Identifier::Assignment},
         {">", Token::Identifier::Greatness},
         {"<", Token::Identifier::Minority},
         {"(", Token::Identifier::OpenBracket},
@@ -37,6 +38,7 @@ SymbolMap Lexer::_OPERATORS = {
         {"}", Token::Identifier::CloseCurlyBracket},
         {",", Token::Identifier::Comma},
         {"#", Token::Identifier::Comment},
+        {"-", Token::Identifier::Minus},
 };
 
 

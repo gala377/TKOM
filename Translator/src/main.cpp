@@ -11,15 +11,21 @@
 std::string tokenToStr(const Syntax::Token::Token&);
 
 int main() {
-    Source src("test.txt");
+    Source src("test2.txt");
     Syntax::Lexer lex(src);
-    Parser::Parser pars(lex);
+    for(auto token = lex.nextToken();
+        token.type() != Syntax::Token::Type::Nil;
+        token = lex.nextToken()) {
+        std::cout << tokenToStr(token);
+    }
 
-    auto tree = pars.parse();
-    std::cout << "Got tree\n";
-    std::cout << tree;
-
-    std::cout << tree.getCurrent()->parse();
+//    Parser::Parser pars(lex);
+//
+//    auto tree = pars.parse();
+//    std::cout << "Got tree\n";
+//    std::cout << tree;
+//
+//    std::cout << tree.getCurrent()->parse();
     return 0;
 }
 

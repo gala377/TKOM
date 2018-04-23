@@ -32,12 +32,12 @@ namespace Syntax::Token {
         Return,
 
         // Operators
-        Equality=16, Addition, Multiplication,
-        Division, Assigment, Greatness,
+        Equality=16, Addition, Minus, Multiplication,
+        Division, Assignment, Greatness,
         Minority, Comma,
 
         //Other
-        Space=24, NewLine, String
+        Space=25, NewLine, String
 
     };
 
