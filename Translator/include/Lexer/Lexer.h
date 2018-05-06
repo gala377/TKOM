@@ -17,6 +17,8 @@
 #include "Token.h"
 
 
+// TODO Lexer bug - freezes if new lines at the end of the file
+
 namespace Syntax {
 
     using AssemblersMap = std::map<Token::Type, std::function<Token::Token(char)>>;
@@ -35,6 +37,8 @@ namespace Syntax {
 
         std::pair<bool, bool> newContext(bool spaces, bool new_lines);
         void retrieveContext();
+
+        std::tuple<int, int> inFilePosition() const;
     protected:
         AssemblersMap _token_assemblers;
         Context _context;

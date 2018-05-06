@@ -6,7 +6,10 @@
 
 using namespace Parser;
 
-// TODO no main function is an error
+// TODO UgetToken needed for lexer
+// we need it for cases like ( expr ) or keyword expr { }
+//                                  ^                 ^
+// as they end expresion but will be needed higher
 
 Parser::Parser::Parser(Syntax::Lexer& lexer) : _lexer(lexer), _scope(Scope()) {
     auto root = new Document;
@@ -25,10 +28,14 @@ Tree Parser::Parser::parse() {
             _tree.getCurrent()->addChild( parseFunction() );
         } else {
             // TODO - throw custom exception with wrong token info inside
-            throw std::runtime_error("Expected comment or function got something else");
+            auto [line, position] = _lexer.inFilePosition();
+            std::string mess = "Expected comment or function got something else";
+            mess = std::to_string(line) + ":" + std::to_string(position) + " " + mess;
+            throw std::runtime_error(mess);
         }
+        log("Waiting for nil");
     }
-    std::cout << "Returning tree\n";
+    log("Returning tree");
     _lexer.retrieveContext();
     return std::move(_tree);
 }
@@ -43,6 +50,7 @@ std::shared_ptr<Tree::Node> Parser::Parser::parseFunction() {
     for(auto child: parseCodeBlock(function_scope)) {
         function->addChild(child);
     }
+    log("Returning function");
     return function;
 }
 
@@ -112,7 +120,20 @@ std::vector<std::shared_ptr<Tree::Node>> Parser::Parser::parseCodeBlock(Scope& e
             continue;
         } else if(curr.identifier() == Syntax::Token::Identifier::Variable) {
             expressions.emplace_back(parseVariableDeclaration(current_scope));
+        } else if(curr.identifier() == Syntax::Token::Identifier::Return) {
+            expressions.emplace_back(parseReturn(current_scope));
+        } else if(curr.identifier() == Syntax::Token::Identifier::Loop) {
+            expressions.emplace_back(parseLoop(current_scope));
+        } else if(curr.identifier() == Syntax::Token::Identifier::If) {
+            expressions.emplace_back(parseIf(current_scope));
         }
+        // todo
+        // identifier - function call and reaasignment
+        // loop
+        // critical
+        // concurrent
+        // if
+        // return
     }
 
     _lexer.retrieveContext();
@@ -129,7 +150,7 @@ std::shared_ptr<Expression> Parser::Parser::parseVariableDeclaration(Scope& enve
     if(enveloping_scope.isDefined(curr.symbol())) {
         throw std::runtime_error("Symbol already in use!");
     }
-    enveloping_scope.addIdentifier({curr.symbol(), Identifier::variable});
+    auto new_identifier = curr.symbol();
     auto left_side = std::make_shared<VariableDeclaration>(curr.symbol());
 
     curr = _lexer.nextToken();
@@ -138,7 +159,7 @@ std::shared_ptr<Expression> Parser::Parser::parseVariableDeclaration(Scope& enve
     }
 
     auto right_side = parseExpression(enveloping_scope);
-
+    enveloping_scope.addIdentifier({new_identifier, Identifier::variable});
     _lexer.retrieveContext();
     return std::make_shared<Assignment>(left_side, right_side);
 }
@@ -157,19 +178,27 @@ std::shared_ptr<Expression> Parser::Parser::parseExpression(Scope& enveloping_sc
     if(curr.identifier() == Syntax::Token::Identifier::NewLine) {
         right_side = std::make_shared<Empty>();
         log("New line - right side is empty");
+    } else if(curr.identifier() == Syntax::Token::Identifier::OpenCurlyBracker) {
+        right_side = std::make_shared<Empty>();
+        log("{ sign - right side is empty");
     } else if(curr.type() != Syntax::Token::Type::Operator) {
         throw std::runtime_error("Operator expected!");
     } else {
         log("Parsing right side");
-        expr_operator = curr.symbol();
-        log("Operator is ", expr_operator);
-        // TODO check if symbol is valid in this context
-        // + - * /
-        right_side = parseExpression(enveloping_scope);
-        log("Right side parsed ", right_side->repr());
+        // TODO ugly but works for now
+        if(curr.identifier() == Syntax::Token::Identifier::CloseBracket) {
+            right_side = std::make_shared<Empty>();
+        } else {
+            expr_operator = curr.symbol();
+            log("Operator is ", expr_operator);
+            // TODO check if symbol is valid in this context
+            // + - * /
+            right_side = parseExpression(enveloping_scope);
+            log("Right side parsed ", right_side->repr());
+        }
     }
 
-
+    log("Returning expr");
     _lexer.retrieveContext();
     return std::make_shared<Expression>(left_side, right_side, expr_operator);
 }
@@ -219,8 +248,15 @@ std::shared_ptr<Expression> Parser::Parser::parseLeftSideOfExpr(Scope& envelopin
         left_side = std::make_shared<ConstExpr>(curr.symbol());
         log("Const expr ", left_side->repr());
     } else if(curr.identifier() == Syntax::Token::Identifier::Identifier) {
-        //parse identifier
-        throw std::runtime_error("Identifiers not supported yet");
+        if(enveloping_scope.isDefined(curr.symbol())) {
+            if(auto id = enveloping_scope.find(curr.symbol()); id.type == Identifier::Type::function) {
+                throw std::runtime_error("Function calls unsupported");
+            } else {
+                left_side = std::make_shared<VariableCall>(curr.symbol());
+            }
+        } else {
+            throw std::runtime_error("Usage of undefined identifier");
+        }
     } else {
         throw std::runtime_error("Unsupported syntax in expression");
     }
@@ -229,3 +265,24 @@ std::shared_ptr<Expression> Parser::Parser::parseLeftSideOfExpr(Scope& envelopin
     return left_side;
 }
 
+
+
+std::shared_ptr<Statement> Parser::Parser::parseReturn(Scope& enveloping_scope) {
+    return std::make_shared<Statement>("return", parseExpression(enveloping_scope));
+}
+
+std::shared_ptr<Statement> Parser::Parser::parseLoop(Scope& enveloping_scope) {
+    return std::make_shared<Statement>("for", parseExpression(enveloping_scope));
+}
+
+std::shared_ptr<Statement> Parser::Parser::parseIf(Scope& enveloping_scope) {
+    return std::make_shared<Statement>("if", parseExpression(enveloping_scope));
+}
+
+std::shared_ptr<Statement> Parser::Parser::parseCritical(Scope& enveloping_scope) {
+    return std::shared_ptr<Statement>();
+}
+
+std::shared_ptr<Statement> Parser::Parser::parseConcurrent(Scope& enveloping_scope) {
+    return std::shared_ptr<Statement>();
+}

@@ -87,7 +87,6 @@ namespace Parser {
         std::string repr() const override;
     };
 
-
     class InBracketExpr: public Expression {
     public:
         explicit InBracketExpr(std::shared_ptr<Expression> expr);
@@ -107,13 +106,14 @@ namespace Parser {
         Assignment(std::shared_ptr<Tree::Node> left_side,
                    std::shared_ptr<Tree::Node> right_side);
 
+        std::string parse() const override;
         std::string repr() const override;
     };
 
 
-    class VariableCall:  public VariableDeclaration {
+    class VariableCall:  public Expression, VariableDeclaration {
     public:
-        using VariableDeclaration::Symbol;
+        VariableCall(std::string symbol);
 
         std::string parse() const override;
         std::string repr() const override;
@@ -128,6 +128,20 @@ namespace Parser {
         std::string repr() const override;
     };
 
+
+    class Statement: public Symbol {
+    public:
+        Statement(std::string symbol, std::shared_ptr<Expression> expr);
+
+        std::string parse() const override;
+        std::string repr() const override;
+
+        std::shared_ptr<Expression> expr() const;
+
+    protected:
+        std::shared_ptr<Expression> _expr;
+
+    };
 
     class Empty : public Expression {
     public:

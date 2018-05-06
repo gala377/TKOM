@@ -30,11 +30,21 @@ namespace Parser {
 
         std::vector<std::shared_ptr<Tree::Node>> parseCodeBlock(Scope& enveloping_scope);
 
+        // Expressions
+
         std::shared_ptr<Expression> parseVariableDeclaration(Scope& enveloping_scope);
         std::shared_ptr<Expression> parseExpression(Scope& enveloping_scope);
         std::shared_ptr<Expression> parseBracketExpression(Scope& enveloping_scope);
 
         std::shared_ptr<Expression> parseLeftSideOfExpr(Scope& enveloping_scope);
+
+        // Statements
+
+        std::shared_ptr<Statement> parseReturn(Scope& enveloping_scope);
+        std::shared_ptr<Statement> parseLoop(Scope& enveloping_scope);
+        std::shared_ptr<Statement> parseIf(Scope& enveloping_scope);
+        std::shared_ptr<Statement> parseCritical(Scope& enveloping_scope);
+        std::shared_ptr<Statement> parseConcurrent(Scope& enveloping_scope);
 
         template <class ...Args>
         void log(Args&&... args) {

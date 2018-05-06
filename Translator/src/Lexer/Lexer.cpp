@@ -66,6 +66,10 @@ Lexer::~Lexer() {
 }
 
 
+std::tuple<int, int> Lexer::inFilePosition() const {
+    return {_src_file.line(), _src_file.inLinePosition()};
+}
+
 Token::Token Lexer::nextToken() {
     // std::cout << "Reading next token..." << "\n";
     while(!_src_file.eof()) {

@@ -145,7 +145,12 @@ Expression::Expression(Tree::Node* left_side,
                                std::move(root_operator)) {}
 
 std::string Expression::parse() const {
-    return _left->parse() + " " + _operator + " "+ _right->parse() + "\n";
+    // TODO change "" to some const
+    if(_operator != "") {
+        return _left->parse() + " " + _operator + " " + _right->parse();
+    }
+    // TODO if operator is empty and right side is not throw exception
+    return _left->parse();
 }
 
 std::string Expression::repr() const {
@@ -161,17 +166,16 @@ Tree::Node* Expression::right() {
 }
 
 
-InBracketExpr::InBracketExpr(std::shared_ptr<Expression> expr): Expression(
-        std::move(expr),
-        std::make_shared<Empty>(),
-        "") {}
+InBracketExpr::InBracketExpr(std::shared_ptr<Parser::Expression> expr): _expr(std::move(expr)) {
+    addChild(_expr);
+};
 
 std::string InBracketExpr::parse() const {
-    return "(" + Expression::parse() + ")";
+    return "(" + _expr->parse() + ")";
 }
 
 std::string InBracketExpr::repr() const {
-    return "Brackets ()";
+    return "Brackets ()\n";
 }
 
 std::shared_ptr<Expression> InBracketExpr::expr() const {
@@ -190,11 +194,17 @@ Assignment::Assignment(Tree::Node* left_side, Tree::Node* right_side): Expressio
                                                                                 right_side,
                                                                                 "=") { }
 
+
+std::string Assignment::parse() const {
+    return Expression::parse() + "\n";
+}
+
 std::string Assignment::repr() const {
     return "Assignment\n";
 }
 
 
+VariableCall::VariableCall(std::string symbol): VariableDeclaration(symbol) {}
 
 std::string VariableCall::parse() const {
     return symbol();
@@ -236,3 +246,18 @@ std::string ConstExpr::repr() const {
     return "ConstExpr " + Symbol::repr();
 }
 
+
+Statement::Statement(std::string symbol, std::shared_ptr<Expression> expr): Symbol(std::move(symbol)),
+                                                                            _expr(std::move(expr)) {}
+
+std::string Statement::parse() const {
+    return Symbol::parse() + " " + _expr->parse();
+}
+
+std::string Statement::repr() const {
+    return "Statement " + _symbol + " " + _expr->parse() + "\n";
+}
+
+std::shared_ptr<Expression> Statement::expr() const {
+    return _expr;
+}
