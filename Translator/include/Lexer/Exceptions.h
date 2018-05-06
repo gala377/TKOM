@@ -2,8 +2,8 @@
 // Created by igor on 14.04.18.
 //
 
-#ifndef TRANSLATOR_EXCEPTIONS_H
-#define TRANSLATOR_EXCEPTIONS_H
+#ifndef TRANSLATOR_LEXER_EXCEPTIONS_H
+#define TRANSLATOR_LEXER_EXCEPTIONS_H
 
 #include <exception>
 #include <cstdint>

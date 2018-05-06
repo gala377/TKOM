@@ -87,6 +87,7 @@ namespace Parser {
         std::string repr() const override;
     };
 
+
     class InBracketExpr: public Expression {
     public:
         explicit InBracketExpr(std::shared_ptr<Expression> expr);
@@ -120,9 +121,9 @@ namespace Parser {
     };
 
 
-    class FunctionCall: public FunctionDeclaration {
+    class FunctionCall: public Expression, FunctionDeclaration {
     public:
-        using FunctionDeclaration::FunctionDeclaration;
+        FunctionCall(std::string symbol, std::vector<std::string> args);
 
         std::string parse() const override;
         std::string repr() const override;
@@ -131,6 +132,7 @@ namespace Parser {
 
     class Statement: public Symbol {
     public:
+        explicit Statement(std::string symbol);
         Statement(std::string symbol, std::shared_ptr<Expression> expr);
 
         std::string parse() const override;
@@ -142,6 +144,23 @@ namespace Parser {
         std::shared_ptr<Expression> _expr;
 
     };
+
+
+    class BlockStatement: public Statement {
+    public:
+
+        using block_t = std::vector<std::shared_ptr<Tree::Node>>;
+
+        explicit BlockStatement(block_t block);
+        BlockStatement(std::string symbol,
+                       block_t block);
+        BlockStatement(std::string symbol,
+                       std::shared_ptr<Expression> expr,
+                       block_t block);
+
+        std::string parse() const override;
+    };
+
 
     class Empty : public Expression {
     public:

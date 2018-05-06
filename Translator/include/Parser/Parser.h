@@ -38,6 +38,9 @@ namespace Parser {
 
         std::shared_ptr<Expression> parseLeftSideOfExpr(Scope& enveloping_scope);
 
+        std::shared_ptr<Expression> parseFunctionCall(Scope& enveloping_scope);
+        std::vector<std::string> parseFunctionParameters(Scope& enveloping_scope);
+
         // Statements
 
         std::shared_ptr<Statement> parseReturn(Scope& enveloping_scope);
@@ -51,6 +54,12 @@ namespace Parser {
             std::cout << "[Parser]: ";
             (std::cout <<  ... << args) << "\n";
         }
+
+        template <class Exception, class ...Args>
+        Exception exception(Args... args) const {
+            auto [line, position] = _lexer.inFilePosition();
+            return Exception(line, position, args...);
+        };
     };
 
 

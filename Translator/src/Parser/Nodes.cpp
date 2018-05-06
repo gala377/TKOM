@@ -211,27 +211,35 @@ std::string VariableCall::parse() const {
 }
 
 std::string VariableCall::repr() const {
-    return "Call var " + symbol();
+    return "Call var " + symbol() + "\n";
 }
 
 
+FunctionCall::FunctionCall(std::string symbol, std::vector<std::string> args): FunctionDeclaration(symbol, args) {
+
+}
 
 std::string FunctionCall::parse() const {
-    std::string res = "func ";
+    std::string res = _symbol;
     res += "(";
     if (!_args.empty()) {
         std::for_each(_args.begin(), (_args.end() - 1),
                       [&res](auto &node) {
                           res += node + ", ";
                       });
-        res += *(_args.end() - 1) + " *int64";
+        res += *(_args.end() - 1);
     }
     res += ")";
     return res;
 }
 
 std::string FunctionCall::repr() const {
-    return "call " + FunctionDeclaration::repr();
+    std::string res = "function call " + _symbol + "( ";
+    for(const auto& ch: _args) {
+        res += ch + ", ";
+    }
+    res += ")\n";
+    return res;
 }
 
 
@@ -247,17 +255,52 @@ std::string ConstExpr::repr() const {
 }
 
 
+
+Statement::Statement(std::string symbol): Symbol(std::move(symbol)), _expr(nullptr) {}
+
 Statement::Statement(std::string symbol, std::shared_ptr<Expression> expr): Symbol(std::move(symbol)),
                                                                             _expr(std::move(expr)) {}
 
 std::string Statement::parse() const {
-    return Symbol::parse() + " " + _expr->parse();
+    auto expr_part = _expr ? _expr->parse(): "";
+    return Symbol::parse() + " " + expr_part;
 }
 
 std::string Statement::repr() const {
-    return "Statement " + _symbol + " " + _expr->parse() + "\n";
+    auto expr_part = _expr ? _expr->parse(): "";
+    return "Statement " + _symbol + " " + expr_part + "\n";
 }
 
 std::shared_ptr<Expression> Statement::expr() const {
     return _expr;
 }
+
+
+BlockStatement::BlockStatement(BlockStatement::block_t block): Statement("") {
+    for(auto expr: block) {
+        addChild(expr);
+    }
+}
+
+BlockStatement::BlockStatement(std::string symbol, BlockStatement::block_t block): Statement(symbol) {
+    for(auto expr: block) {
+        addChild(expr);
+    }
+}
+
+BlockStatement::BlockStatement(std::string symbol, std::shared_ptr<Expression> expr, BlockStatement::block_t block): Statement(symbol, expr) {
+    for(auto instr: block) {
+        addChild(instr);
+    }
+}
+
+std::string BlockStatement::parse() const {
+    auto res = Statement::parse();
+    res += " {\n";
+    for(auto expr: _children) {
+        res += "\t\t" + expr->parse();
+    }
+    res += "\n}\n";
+    return res;
+}
+
