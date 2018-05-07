@@ -27,7 +27,7 @@ Parser::Parser::Parser(Syntax::Lexer& lexer) : _lexer(lexer), _scope(Scope()) {
 Tree Parser::Parser::parse() {
     _lexer.newContext(true, true);
     for(auto curr = _lexer.nextToken();
-        curr.type() != Syntax::Token::Type::Nil;
+        curr.type() != Syntax::Token::Type::Eof;
         curr = _lexer.nextToken()) {
         
         if(curr.type() == Syntax::Token::Type::Comment) {

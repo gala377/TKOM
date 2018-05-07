@@ -7,7 +7,7 @@
 using namespace Syntax::Token;
 
 const std::map<Identifier, Type> Token::_ID_TO_TYPE = {
-        {Identifier::Nil,                  Type::Nil},
+        {Identifier::Eof,                  Type::Eof},
 
         {Identifier::Identifier,           Type::Identifier},
 
@@ -19,7 +19,7 @@ const std::map<Identifier, Type> Token::_ID_TO_TYPE = {
         {Identifier::Addition,             Type::Operator},
         {Identifier::Multiplication,       Type::Operator},
         {Identifier::Division,             Type::Operator},
-        {Identifier::Assignment,            Type::Operator},
+        {Identifier::Assignment,           Type::Operator},
         {Identifier::Greatness,            Type::Operator},
         {Identifier::Minority,             Type::Operator},
         {Identifier::Comma,                Type::Operator},
@@ -41,11 +41,12 @@ const std::map<Identifier, Type> Token::_ID_TO_TYPE = {
 
         {Identifier::Comment,              Type::Comment},
         {Identifier::String,               Type::String},
+        {Identifier::Nil,                  Type::Nil},
 };
 
 
-Token::Token() : _identifier(Identifier::Nil),
-                 _type(Type::Nil),
+Token::Token() : _identifier(Identifier::Eof),
+                 _type(Type::Eof),
                  _line(0),
                  _position(0) {};
 

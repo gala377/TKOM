@@ -12,13 +12,14 @@
 namespace Syntax::Token {
 
     enum class Type {
-        Nil, Identifier, Keyword, Operator,
+        Eof, Identifier, Keyword, Operator,
         ConstExpr, String, Comment, Blank,
+        Nil,
     };
 
     enum class Identifier {
 
-        Nil=0,
+        Eof=0,
 
         // General identifiers
         Identifier=1, OpenCurlyBracker, CloseCurlyBracket,
@@ -37,7 +38,7 @@ namespace Syntax::Token {
         Minority, Comma,
 
         //Other
-        Space=25, NewLine, String
+        Space=25, NewLine, String, Nil,
 
     };
 

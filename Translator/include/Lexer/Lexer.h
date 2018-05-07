@@ -34,12 +34,15 @@ namespace Syntax {
         ~Lexer();
 
         Token::Token nextToken();
+        void ungetToken(Token::Token token);
 
         std::pair<bool, bool> newContext(bool spaces, bool new_lines);
         void retrieveContext();
 
         std::tuple<int, int> inFilePosition() const;
     protected:
+        std::stack<Token::Token> _last_token;
+
         AssemblersMap _token_assemblers;
         Context _context;
 

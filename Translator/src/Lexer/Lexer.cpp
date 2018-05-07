@@ -72,6 +72,11 @@ std::tuple<int, int> Lexer::inFilePosition() const {
 
 Token::Token Lexer::nextToken() {
     // std::cout << "Reading next token..." << "\n";
+    if(!_last_token.empty()) {
+        auto ret_token = _last_token.top();
+        _last_token.pop();
+        return ret_token;
+    }
     while(!_src_file.eof()) {
         auto ch = _src_file.getNextChar();
         auto token_type = inferTokenTypeByFirstCharacter(ch);
@@ -84,9 +89,12 @@ Token::Token Lexer::nextToken() {
 
         return res;
     }
-    return {Token::Identifier::Nil, "", _src_file.line(), 0};
+    return {Token::Identifier::Eof, "", _src_file.line(), 0};
 }
 
+void Lexer::ungetToken(Token::Token token) {
+    _last_token.push(token);
+}
 
 Token::Type Lexer::inferTokenTypeByFirstCharacter(const char ch) const {
     if(isBegginingOfTheIdentifier(ch)) {

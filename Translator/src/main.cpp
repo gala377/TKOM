@@ -14,7 +14,7 @@ int main() {
     Source src("test2.txt");
     Syntax::Lexer lex(src);
 //    for(auto token = lex.nextToken();
-//        token.type() != Syntax::Token::Type::Nil;
+//        token.type() != Syntax::Token::Type::Eof;
 //        token = lex.nextToken()) {
 //        std::cout << tokenToStr(token);
 //    }
