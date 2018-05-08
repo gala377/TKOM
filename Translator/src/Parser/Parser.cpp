@@ -33,7 +33,9 @@ Tree Parser::Parser::parse() {
         if(curr.type() == Syntax::Token::Type::Comment) {
             continue;
         } else if(curr.identifier() == Syntax::Token::Identifier::Function) {
+            log("parse() - Parsing new function");
             _tree.getCurrent()->addChild( parseFunction() );
+            log("Function parsed");
         } else {
             throw exception<ExpectedError>("Comment or Function", curr.symbol());
         }
@@ -50,6 +52,9 @@ std::shared_ptr<Tree::Node> Parser::Parser::parseFunction() {
     auto function_scope = _scope.newSubScope();
     for(auto arg: function->args()) {
         function_scope.addIdentifier({arg, Identifier::variable});
+    }
+    if(auto curr = _lexer.nextToken(); curr.identifier() != Syntax::Token::Identifier::OpenCurlyBracker) {
+        throw exception<ExpectedError>("{", curr.symbol());
     }
     for(auto child: parseCodeBlock(function_scope)) {
         function->addChild(child);
@@ -142,17 +147,15 @@ std::vector<std::shared_ptr<Tree::Node>> Parser::Parser::parseCodeBlock(Scope& e
         } else if(curr.identifier() == Syntax::Token::Identifier::Critical) {
             log("Critical");
             expressions.emplace_back(parseCritical(current_scope));
+        } else if(curr.identifier() == Syntax::Token::Identifier::OpenCurlyBracker) {
+            log("Block");
+            expressions.emplace_back(parseCodeBlockStatement(current_scope));
         } else if(curr.identifier() == Syntax::Token::Identifier::Identifier) {
             log("Identifier");
             //todo make it another function, ones again unget_token is needed for that
             if(current_scope.isDefined(curr.symbol())) {
                 if(auto id = current_scope.find(curr.symbol()); id.type == Identifier::Type::function) {
-                    auto args = parseFunctionArguments();
-                    for(auto arg: args) {
-                        if(!current_scope.isDefined(arg)) {
-                            throw exception<UndefinedIdentifier>(arg);
-                        }
-                    }
+                    auto args = parseFunctionParameters(current_scope);
                     expressions.emplace_back(std::make_shared<FunctionCall>(
                             id.symbol,
                             args));
@@ -182,7 +185,29 @@ std::shared_ptr<Expression> Parser::Parser::parseFunctionCall(Scope& enveloping_
 }
 
 std::vector<std::string> Parser::Parser::parseFunctionParameters(Scope& enveloping_scope) {
-    return std::vector<std::string>();
+    _lexer.newContext(true, true);
+    std::vector<std::string> args = {};
+    auto curr = _lexer.nextToken();
+    if(curr.identifier() != Syntax::Token::Identifier::OpenBracket) {
+        throw exception<ExpectedError>("(", curr.symbol());
+    }
+    if(curr = _lexer.nextToken(); curr.identifier() == Syntax::Token::Identifier::CloseBracket) {
+        return args;
+    }
+    _lexer.ungetToken(curr);
+    while(true) {
+        // todo make it children
+        args.emplace_back(parseExpression(enveloping_scope)->parse());
+        if(curr = _lexer.nextToken(); curr.identifier() == Syntax::Token::Identifier::CloseBracket) {
+            break;
+        }
+        if(curr.identifier() != Syntax::Token::Identifier::Comma) {
+            throw exception<ExpectedError>(",", curr.symbol());
+        }
+    }
+
+    _lexer.retrieveContext();
+    return args;
 }
 
 
@@ -224,22 +249,22 @@ std::shared_ptr<Expression> Parser::Parser::parseExpression(Scope& enveloping_sc
     if(curr.identifier() == Syntax::Token::Identifier::NewLine) {
         right_side = std::make_shared<Empty>();
         log("New line - right side is empty");
-    } else if(curr.identifier() == Syntax::Token::Identifier::OpenCurlyBracker) {
-        // TODO the same case as ( ) - ugly but works
+    } else if(curr.identifier() == Syntax::Token::Identifier::OpenCurlyBracker ||
+            curr.identifier() == Syntax::Token::Identifier::Comma) {
+        _lexer.ungetToken(curr);
         right_side = std::make_shared<Empty>();
-        log("{ sign - right side is empty");
     } else if(curr.type() != Syntax::Token::Type::Operator) {
         throw exception<ExpectedError>("Operator", curr.symbol());
     } else {
         log("Parsing right side");
-        // TODO ugly but works for now
         if(curr.identifier() == Syntax::Token::Identifier::CloseBracket) {
+            _lexer.ungetToken(curr);
             right_side = std::make_shared<Empty>();
         } else {
             expr_operator = curr.symbol();
             log("Operator is ", expr_operator);
             // TODO check if symbol is valid in this context
-            // + - * /
+            // exmpl + - * /
             right_side = parseExpression(enveloping_scope);
             log("Right side parsed ", right_side->repr());
         }
@@ -255,7 +280,6 @@ std::shared_ptr<Expression> Parser::Parser::parseBracketExpression(Scope& envelo
 
     std::shared_ptr<Expression> left_side, right_side;
     std::string expr_operator = "";
-
     log("Parsing in bracket expr");
 
     left_side = parseLeftSideOfExpr(enveloping_scope);
@@ -267,6 +291,7 @@ std::shared_ptr<Expression> Parser::Parser::parseBracketExpression(Scope& envelo
         throw exception<ExpectedError>("operator", curr.symbol());
     } else if(curr.identifier() == Syntax::Token::Identifier::CloseBracket) {
         right_side = std::make_shared<Empty>();
+        _lexer.ungetToken(curr);
         log(") encauntered - right side is empty");
     } else {
         expr_operator = curr.symbol();
@@ -275,6 +300,10 @@ std::shared_ptr<Expression> Parser::Parser::parseBracketExpression(Scope& envelo
         log("Operator found: ", expr_operator);
         right_side = parseExpression(enveloping_scope);
         log("Right side parsed ", right_side->repr());
+    }
+
+    if(curr = _lexer.nextToken(); curr.identifier() != Syntax::Token::Identifier::CloseBracket) {
+        throw exception<ExpectedError>(")", curr.symbol());
     }
 
     _lexer.retrieveContext();
@@ -294,15 +323,16 @@ std::shared_ptr<Expression> Parser::Parser::parseLeftSideOfExpr(Scope& envelopin
     } else if(curr.identifier() == Syntax::Token::Identifier::ConstExpr) {
         left_side = std::make_shared<ConstExpr>(curr.symbol());
         log("Const expr ", left_side->repr());
+    } else if(curr.identifier() == Syntax::Token::Identifier::Minus) {
+        auto op = curr.symbol();
+        left_side = std::make_shared<Expression>(
+                std::make_shared<Empty>(),
+                parseLeftSideOfExpr(enveloping_scope),
+                op);
     } else if(curr.identifier() == Syntax::Token::Identifier::Identifier) {
         if(enveloping_scope.isDefined(curr.symbol())) {
             if(auto id = enveloping_scope.find(curr.symbol()); id.type == Identifier::Type::function) {
-                auto args = parseFunctionArguments();
-                for(auto arg: args) {
-                    if(!enveloping_scope.isDefined(arg)) {
-                        throw exception<UndefinedIdentifier>(arg);
-                    }
-                }
+                auto args = parseFunctionParameters(enveloping_scope);
                 left_side = std::make_shared<FunctionCall>(id.symbol, args);
             } else {
                 left_side = std::make_shared<VariableCall>(curr.symbol());
@@ -318,6 +348,11 @@ std::shared_ptr<Expression> Parser::Parser::parseLeftSideOfExpr(Scope& envelopin
     return left_side;
 }
 
+
+std::shared_ptr<Statement> Parser::Parser::parseCodeBlockStatement(Scope& enveloping_scope) {
+    auto curr_scope = enveloping_scope.newSubScope();
+    return std::make_shared<BlockStatement>("", parseCodeBlock(curr_scope));
+}
 
 std::shared_ptr<Statement> Parser::Parser::parseReturn(Scope& enveloping_scope) {
     return std::make_shared<Statement>("return", parseExpression(enveloping_scope));
@@ -335,8 +370,14 @@ std::shared_ptr<Statement> Parser::Parser::parseLoop(Scope& enveloping_scope) {
 
 std::shared_ptr<Statement> Parser::Parser::parseIf(Scope& enveloping_scope) {
     auto expr = parseExpression(enveloping_scope);
+
     auto curr_scope = enveloping_scope.newSubScope();
+
+    if(auto curr = _lexer.nextToken(); curr.identifier() != Syntax::Token::Identifier::OpenCurlyBracker) {
+        throw exception<ExpectedError>("{", curr.symbol());
+    }
     auto block = parseCodeBlock(curr_scope);
+
     return std::make_shared<BlockStatement>(
             "if",
             expr,
@@ -345,6 +386,11 @@ std::shared_ptr<Statement> Parser::Parser::parseIf(Scope& enveloping_scope) {
 
 std::shared_ptr<Statement> Parser::Parser::parseCritical(Scope& enveloping_scope) {
     auto curr_scope = enveloping_scope.newSubScope();
+
+    if(auto curr = _lexer.nextToken(); curr.identifier() != Syntax::Token::Identifier::OpenCurlyBracker) {
+        throw exception<ExpectedError>("{", curr.symbol());
+    }
+
     return std::make_shared<BlockStatement>(
             "critical_IN_PROGRESS",
             parseCodeBlock(curr_scope));
@@ -352,6 +398,11 @@ std::shared_ptr<Statement> Parser::Parser::parseCritical(Scope& enveloping_scope
 
 std::shared_ptr<Statement> Parser::Parser::parseConcurrent(Scope& enveloping_scope) {
     auto curr_scope = enveloping_scope.newSubScope();
+
+    if(auto curr = _lexer.nextToken(); curr.identifier() != Syntax::Token::Identifier::OpenCurlyBracker) {
+        throw exception<ExpectedError>("{", curr.symbol());
+    }
+
     return std::make_shared<BlockStatement>(
             "concurrent_IN_PROGRESS",
             parseCodeBlock(curr_scope));

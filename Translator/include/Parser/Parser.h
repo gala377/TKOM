@@ -43,6 +43,7 @@ namespace Parser {
 
         // Statements
 
+        std::shared_ptr<Statement> parseCodeBlockStatement(Scope& enveloping_scope);
         std::shared_ptr<Statement> parseReturn(Scope& enveloping_scope);
         std::shared_ptr<Statement> parseLoop(Scope& enveloping_scope);
         std::shared_ptr<Statement> parseIf(Scope& enveloping_scope);
