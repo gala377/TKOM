@@ -114,6 +114,7 @@ std::string VariableDeclaration::repr() const {
 }
 
 
+
 Empty::Empty(): Expression() {}
 
 std::string Empty::parse() const {
@@ -123,6 +124,7 @@ std::string Empty::parse() const {
 std::string Empty::repr() const {
     return "Empty\n";
 }
+
 
 
 Expression::Expression(): _left(nullptr), _right(nullptr) {
@@ -166,6 +168,7 @@ Tree::Node* Expression::right() {
 }
 
 
+
 InBracketExpr::InBracketExpr(std::shared_ptr<Parser::Expression> expr): _expr(std::move(expr)) {
     addChild(_expr);
 };
@@ -195,6 +198,7 @@ Assignment::Assignment(Tree::Node* left_side, Tree::Node* right_side): Expressio
                                                                                 "=") { }
 
 
+
 std::string Assignment::parse() const {
     return Expression::parse() + "\n";
 }
@@ -202,6 +206,7 @@ std::string Assignment::parse() const {
 std::string Assignment::repr() const {
     return "Assignment\n";
 }
+
 
 
 VariableCall::VariableCall(std::string symbol): VariableDeclaration(symbol) {}
@@ -213,6 +218,7 @@ std::string VariableCall::parse() const {
 std::string VariableCall::repr() const {
     return "Call var " + symbol() + "\n";
 }
+
 
 
 FunctionCall::FunctionCall(std::string symbol, std::vector<std::string> args): FunctionDeclaration(symbol, args) {
@@ -241,6 +247,11 @@ std::string FunctionCall::repr() const {
     res += ")\n";
     return res;
 }
+
+
+
+PrintCall::PrintCall(FunctionCall::args_t args): FunctionCall("fmt.Printf", std::move(args)) {}
+
 
 
 ConstExpr::ConstExpr(std::string symbol): Expression(),
@@ -276,20 +287,21 @@ std::shared_ptr<Expression> Statement::expr() const {
 }
 
 
+
 BlockStatement::BlockStatement(BlockStatement::block_t block): Statement("") {
-    for(auto expr: block) {
+    for(const auto& expr: block) {
         addChild(expr);
     }
 }
 
 BlockStatement::BlockStatement(std::string symbol, BlockStatement::block_t block): Statement(symbol) {
-    for(auto expr: block) {
+    for(const auto& expr: block) {
         addChild(expr);
     }
 }
 
 BlockStatement::BlockStatement(std::string symbol, std::shared_ptr<Expression> expr, BlockStatement::block_t block): Statement(symbol, expr) {
-    for(auto instr: block) {
+    for(const auto& instr: block) {
         addChild(instr);
     }
 }
@@ -297,10 +309,50 @@ BlockStatement::BlockStatement(std::string symbol, std::shared_ptr<Expression> e
 std::string BlockStatement::parse() const {
     auto res = Statement::parse();
     res += " {\n";
-    for(auto expr: _children) {
+    for(const auto& expr: _children) {
         res += "\t\t" + expr->parse();
     }
     res += "\n}\n";
+    return res;
+}
+
+
+
+ElseStatement::ElseStatement(std::shared_ptr<BlockStatement> after_else_clause):
+    Statement("else") {
+    addChild(after_else_clause);
+}
+
+std::string ElseStatement::parse() const {
+    auto res = Statement::parse() + " ";
+    for(const auto& child : _children) {
+        res += child->parse() + " ";
+    }
+    return res;
+}
+
+
+
+IfStatement::IfStatement(std::shared_ptr<Expression> expr,
+                         BlockStatement::block_t block) : BlockStatement(
+                                 "if", std::move(expr), block), _else(nullptr){ }
+
+void IfStatement::setElse(std::shared_ptr<ElseStatement> else_statement) {
+    _else = std::move(else_statement);
+    addChild(_else);
+}
+
+std::string IfStatement::parse() const {
+    auto res = Statement::parse();
+    res += " {\n";
+    for(const auto& expr: _children) {
+        if(std::dynamic_pointer_cast<ElseStatement>(expr)) {
+            continue;
+        }
+        res += "\t\t" + expr->parse();
+    }
+    res += "\n}";
+    res += _else ? " " + _else ->parse() : "\n";
     return res;
 }
 

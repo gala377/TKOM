@@ -1,4 +1,5 @@
 /Translator/.idea/
 /Translator/cmake-build-debug/
-
 *.orig
+*.h.orig
+*.cpp.orig

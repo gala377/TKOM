@@ -11,6 +11,9 @@ namespace Parser {
 
     class Parser {
         public:
+        using token_id_t = Syntax::Token::Identifier;
+        using token_type_t = Syntax::Token::Type;
+
         Parser(Syntax::Lexer& lexer);
 
         Tree parse();
@@ -20,6 +23,13 @@ namespace Parser {
 
         Tree _tree;
         Scope _scope;
+
+        const std::set<token_id_t> _EXPR_OPERATORS = {
+                token_id_t::Addition, token_id_t::Minus,
+                token_id_t::Multiplication, token_id_t::Division,
+                token_id_t::Minority, token_id_t::Greatness,
+                token_id_t::Equality, token_id_t::NonEquality,
+        };
 
         std::shared_ptr<Tree::Node> parseFunction();
 
@@ -37,9 +47,13 @@ namespace Parser {
         std::shared_ptr<Expression> parseBracketExpression(Scope& enveloping_scope);
 
         std::shared_ptr<Expression> parseLeftSideOfExpr(Scope& enveloping_scope);
+        bool isOperatorValidInExpr(token_id_t op) const;
 
         std::shared_ptr<Expression> parseFunctionCall(Scope& enveloping_scope);
-        std::vector<std::string> parseFunctionParameters(Scope& enveloping_scope);
+        FunctionCall::args_t parseFunctionParameters(Scope& enveloping_scope);
+
+        std::shared_ptr<Expression> parsePrintCall(Scope& enveloping_scope);
+        PrintCall::args_t parsePrintParameters(Scope& enveloping_scope);
 
         // Statements
 
@@ -47,6 +61,7 @@ namespace Parser {
         std::shared_ptr<Statement> parseReturn(Scope& enveloping_scope);
         std::shared_ptr<Statement> parseLoop(Scope& enveloping_scope);
         std::shared_ptr<Statement> parseIf(Scope& enveloping_scope);
+        std::shared_ptr<ElseStatement> parseElse(Scope& enveloping_scope);
         std::shared_ptr<Statement> parseCritical(Scope& enveloping_scope);
         std::shared_ptr<Statement> parseConcurrent(Scope& enveloping_scope);
 

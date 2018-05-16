@@ -15,6 +15,7 @@ namespace Parser {
     };
 
 
+
     class Symbol: public virtual Tree::Node {
     public:
         Symbol(std::string symbol);
@@ -27,6 +28,7 @@ namespace Parser {
     protected:
         std::string _symbol;
     };
+
 
 
     class FunctionDeclaration : public Symbol {
@@ -53,6 +55,7 @@ namespace Parser {
         std::string parse() const override;
         std::string repr() const override;
     };
+
 
 
     class Expression: public virtual Tree::Node {
@@ -112,6 +115,7 @@ namespace Parser {
     };
 
 
+
     class VariableCall:  public Expression, VariableDeclaration {
     public:
         VariableCall(std::string symbol);
@@ -123,11 +127,20 @@ namespace Parser {
 
     class FunctionCall: public Expression, FunctionDeclaration {
     public:
-        FunctionCall(std::string symbol, std::vector<std::string> args);
+        using args_t = std::vector<std::string>;
+
+        FunctionCall(std::string symbol, args_t args);
 
         std::string parse() const override;
         std::string repr() const override;
     };
+
+
+    class PrintCall: public FunctionCall {
+    public:
+        PrintCall(args_t args);
+    };
+
 
 
     class Statement: public Symbol {
@@ -162,12 +175,35 @@ namespace Parser {
     };
 
 
+    class ElseStatement: public Statement {
+    public:
+        explicit ElseStatement(std::shared_ptr<BlockStatement> after_else_clause);
+
+        std::string parse() const override;
+    };
+
+
+    class IfStatement: public BlockStatement {
+    public:
+        IfStatement(std::shared_ptr<Expression> expr,
+                    block_t block);
+
+        void setElse(std::shared_ptr<ElseStatement> else_statement);
+
+        std::string parse() const override;
+
+    private:
+        std::shared_ptr<ElseStatement> _else;
+    };
+
+
+
     class Empty : public Expression {
     public:
         Empty();
 
-        std::string parse() const;
-        std::string repr() const;
+        std::string parse() const override;
+        std::string repr() const override;
     };
 }
 

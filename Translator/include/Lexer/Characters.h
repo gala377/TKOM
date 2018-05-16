@@ -12,7 +12,7 @@ namespace Syntax {
     static const std::set<char> _OPERATORS = {
             '=', '/', '(', ')',
             '{', '}', '+', '-', '*',
-            '<', '>', ',',
+            '<', '>', ',', '!',
     };
 
     bool isNewLine(const char ch);

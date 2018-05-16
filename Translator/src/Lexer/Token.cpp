@@ -24,6 +24,8 @@ const std::map<Identifier, Type> Token::_ID_TO_TYPE = {
         {Identifier::Minority,             Type::Operator},
         {Identifier::Comma,                Type::Operator},
         {Identifier::Minus,                Type::Operator},
+        {Identifier::NonEquality,          Type::Operator},
+        {Identifier::Negation,             Type::Operator},
 
         {Identifier::Function,             Type::Keyword},
         {Identifier::Loop,                 Type::Keyword},
@@ -33,6 +35,7 @@ const std::map<Identifier, Type> Token::_ID_TO_TYPE = {
         {Identifier::Variable,             Type::Keyword},
         {Identifier::Concurrent,           Type::Keyword},
         {Identifier::Return,               Type::Keyword},
+        {Identifier::Print,                Type::Keyword},
 
         {Identifier::ConstExpr,            Type::ConstExpr},
 

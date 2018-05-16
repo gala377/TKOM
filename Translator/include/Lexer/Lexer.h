@@ -41,7 +41,7 @@ namespace Syntax {
 
         std::tuple<int, int> inFilePosition() const;
     protected:
-        std::stack<Token::Token> _last_token;
+        std::stack<Token::Token> _pending_tokens;
 
         AssemblersMap _token_assemblers;
         Context _context;

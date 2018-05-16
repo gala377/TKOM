@@ -30,15 +30,15 @@ namespace Syntax::Token {
         // Keywords
         Function=8, Loop, If, Else,
         Critical, Concurrent, Variable,
-        Return,
+        Return, Print,
 
         // Operators
-        Equality=16, Addition, Minus, Multiplication,
+        Equality=17, NonEquality, Addition, Minus, Multiplication,
         Division, Assignment, Greatness,
-        Minority, Comma,
+        Minority, Comma, Negation,
 
         //Other
-        Space=25, NewLine, String, Nil,
+        Space=28, NewLine, String, Nil,
 
     };
 

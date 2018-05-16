@@ -21,11 +21,13 @@ SymbolMap Lexer::_KEYWORDS = {
         {"concurrent", Token::Identifier::Concurrent},
         {"let", Token::Identifier::Variable},
         {"return", Token::Identifier::Return},
+        {"log", Token::Identifier::Print},
 };
 
 
 SymbolMap Lexer::_OPERATORS = {
         {"==", Token::Identifier::Equality},
+        {"!=", Token::Identifier::NonEquality},
         {"+", Token::Identifier::Addition},
         {"*", Token::Identifier::Multiplication},
         {"/", Token::Identifier::Division},
@@ -39,6 +41,7 @@ SymbolMap Lexer::_OPERATORS = {
         {",", Token::Identifier::Comma},
         {"#", Token::Identifier::Comment},
         {"-", Token::Identifier::Minus},
+        {"!", Token::Identifier::Negation},
 };
 
 
@@ -71,10 +74,10 @@ std::tuple<int, int> Lexer::inFilePosition() const {
 }
 
 Token::Token Lexer::nextToken() {
-    // std::cout << "Reading next token..." << "\n";
-    if(!_last_token.empty()) {
-        auto ret_token = _last_token.top();
-        _last_token.pop();
+    std::cout << "Reading next token..." << "\n";
+    if(!_pending_tokens.empty()) {
+        auto ret_token = _pending_tokens.top();
+        _pending_tokens.pop();
         return ret_token;
     }
     while(!_src_file.eof()) {
@@ -93,27 +96,27 @@ Token::Token Lexer::nextToken() {
 }
 
 void Lexer::ungetToken(Token::Token token) {
-    _last_token.push(token);
+    _pending_tokens.push(token);
 }
 
 Token::Type Lexer::inferTokenTypeByFirstCharacter(const char ch) const {
     if(isBegginingOfTheIdentifier(ch)) {
-        // std::cout << "Infering ch as identifier\n";
+        std::cout << "Infering ch as identifier\n";
         return Token::Type::Identifier;
     } else if(isDigit(ch)) {
-        // std::cout << "Infering as Const Expr\n";
+        std::cout << "Infering as Const Expr\n";
         return Token::Type::ConstExpr;
     } else if(isPartOfOperator(ch)) {
-        // std::cout << "Infering ch as an operator\n";
+        std::cout << "Infering ch as an operator\n";
         return Token::Type::Operator;
     } else if(isBlank(ch)) {
-        // std::cout << "Infering ch as blank\n";
+        std::cout << "Infering ch as blank\n";
         return Token::Type::Blank;
     } else if(isComment(ch)) {
-        // std::cout << "Infering ch as comment\n";
+        std::cout << "Infering ch as comment\n";
         return Token::Type::Comment;
     } else if(isString(ch)) {
-        // std::cout << "Infering ch as string\n";
+        std::cout << "Infering ch as string\n";
         return Token::Type::String;
     }
     throw exception<Error>("Unknown character!");
@@ -143,9 +146,9 @@ bool Lexer::skipToken(const Token::Token &token) const {
 
 
 Token::Token Lexer::processBlankChar(char ch) {
-    // std::cout << "Char is blank: " << ch << "\n";
+    std::cout << "Char is blank: " << ch << "\n";
     if(skipBlanks()) {
-        // std::cout << "Skipping blanks\n";
+        std::cout << "Skipping blanks\n";
         _src_file.ungetChar(_src_file.getNextNonBlankChar());
     }
     if(isNewLine(ch)) {
@@ -185,7 +188,7 @@ Token::Token Lexer::processString(char ch) {
 
 
 std::string Lexer::assembleConstExpr(char current) {
-    // std::cout << "Assembling Const Expr:\n";
+    std::cout << "Assembling Const Expr:\n";
     std::string symbol;
     do {
         if (isPartOfOperator(current) || isBlank(current)) {
@@ -197,8 +200,8 @@ std::string Lexer::assembleConstExpr(char current) {
             throw exception<ExpectedError>(std::string("digit"), std::string({current}));
         }
         current = _src_file.getChar();
-        // std::cout << "Read: " << current << "\n";
-        // std::cout << "Symbol: " << symbol << "\n";
+        std::cout << "Read: " << current << "\n";
+        std::cout << "Symbol: " << symbol << "\n";
     } while(!_src_file.eof());
     if(symbol.empty()) {
         throw exception<Error>("Could not assemble const expr!");
@@ -207,7 +210,7 @@ std::string Lexer::assembleConstExpr(char current) {
 }
 
 std::string Lexer::assembleIdentifier(char current) {
-    // std::cout << "Assembling Identifier:\n";
+    std::cout << "Assembling Identifier:\n";
     std::string symbol;
     do {
         if(isPartOfIdentifier(current)) {
@@ -219,8 +222,8 @@ std::string Lexer::assembleIdentifier(char current) {
             throw exception<ExpectedError>("[A-Za-z_0-9]", std::string({current}));
         }
         current = _src_file.getChar();
-        // std::cout << "Read: " << current << "\n";
-        // std::cout << "Symbol: " << symbol << "\n";
+        std::cout << "Read: " << current << "\n";
+        std::cout << "Symbol: " << symbol << "\n";
     } while(!_src_file.eof());
     if(symbol.empty()) {
         throw exception<Error>("Could not assemble identifier!");
@@ -229,25 +232,26 @@ std::string Lexer::assembleIdentifier(char current) {
 }
 
 std::string Lexer::assembleOperator(char current) {
-    // std::cout << "Assembling Operator\n";
+    std::cout << "Assembling Operator\n";
     std::string symbol;
     do {
         if (isPartOfOperator(current)) {
             auto guess = symbol + current;
+            std::cout << "Current guess: " << guess << "\n";
             if (_OPERATORS.find(guess) == _OPERATORS.end()) {
                 _src_file.ungetChar(current);
                 return symbol;
             }
             symbol = guess;
-        } else if (isBlank(current) || isPartOfIdentifier(current) ){
+        } else if (isBlank(current) || isPartOfIdentifier(current) || isString(current)){
             _src_file.ungetChar(current);
             return symbol;
         } else {
             throw exception<ExpectedError>(std::string("operator"), std::string({current}));
         }
         current = _src_file.getChar();
-        // std::cout << "Read: " << current << "\n";
-        // std::cout << "Symbol: " << symbol << "\n";
+        std::cout << "Read: " << current << "\n";
+        std::cout << "Symbol: " << symbol << "\n";
     } while(!_src_file.eof());
     if (symbol.empty()) {
         throw exception<Error>("Could not assemble operator");
@@ -256,7 +260,7 @@ std::string Lexer::assembleOperator(char current) {
 }
 
 std::string Lexer::assembleComment(char current) {
-    // std::cout << "Assembling Comment\n";
+    std::cout << "Assembling Comment\n";
     std::string symbol;
     do {
         if(isNewLine(current)) {
@@ -273,7 +277,7 @@ std::string Lexer::assembleComment(char current) {
 }
 
 std::string Lexer::assembleString(char current) {
-    // std::cout << "Assembling string\n";
+    std::cout << "Assembling string\n";
     std::string symbol;
     do {
         symbol += current;
@@ -307,7 +311,7 @@ void Lexer::retrieveContext() {
 }
 
 Token::Token Lexer::newToken(Token::Identifier id, std::string symbol) const {
-    // std::cout << "Creating new token: {id: " << int(id) << " sym: " << symbol << "}\n";
+    std::cout << "Creating new token: {id: " << int(id) << " sym: " << symbol << "}\n";
     return Token::Token{
             id,
             std::move(symbol),
