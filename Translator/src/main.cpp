@@ -4,6 +4,7 @@
 #include "Lexer/Lexer.h"
 #include "Lexer/Token.h"
 #include "Parser/Parser.h"
+#include "Logger/Logger.h"
 
 #include <sstream>
 #include <string>
@@ -12,14 +13,16 @@ std::string tokenToStr(const Syntax::Token::Token&);
 
 int main() {
     Source src("test2.txt");
-    Syntax::Lexer lex(src);
+    Logging::Logger lexer_log(std::cout, "[Lexer]: ");
+    Syntax::Lexer lex(src, lexer_log);
 //    for(auto token = lex.nextToken();
 //        token.type() != Syntax::Token::Type::Eof;
 //        token = lex.nextToken()) {
 //        std::cout << tokenToStr(token);
 //    }
 
-    Parser::Parser pars(lex);
+    Logging::Logger log(std::cout, "[Parser]: ");
+    Parser::Parser pars(lex, log);
 
     auto tree = pars.parse();
     std::cout << "Got tree\n";

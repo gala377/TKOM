@@ -12,6 +12,7 @@
 #include <map>
 #include <functional>
 #include <stack>
+#include <Logger/Logger.h>
 
 #include "Source.h"
 #include "Token.h"
@@ -30,7 +31,7 @@ namespace Syntax {
         bool skip_spaces = true;
         bool skip_new_lines = true;
 
-        Lexer(Source& src);
+        Lexer(Source& src, Logging::Logger logger = Logging::Logger());
         ~Lexer();
 
         Token::Token nextToken();
@@ -50,6 +51,7 @@ namespace Syntax {
         static SymbolMap _OPERATORS;
 
         Source& _src_file;
+        Logging::Logger _logger;
 
         bool skipSpaces() const;
         bool skipNewLines() const;

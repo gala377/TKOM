@@ -5,6 +5,7 @@
 #include "Parser/Tree.h"
 #include "Parser/Nodes.h"
 #include "Parser/Scope.h"
+#include "Logger/Logger.h"
 #include <set>
 
 namespace Parser {
@@ -14,7 +15,7 @@ namespace Parser {
         using token_id_t = Syntax::Token::Identifier;
         using token_type_t = Syntax::Token::Type;
 
-        Parser(Syntax::Lexer& lexer);
+        Parser(Syntax::Lexer& lexer, Logging::Logger logger = Logging::Logger());
 
         Tree parse();
 
@@ -30,6 +31,8 @@ namespace Parser {
                 token_id_t::Minority, token_id_t::Greatness,
                 token_id_t::Equality, token_id_t::NonEquality,
         };
+
+        Logging::Logger _logger;
 
         std::shared_ptr<Tree::Node> parseFunction();
 

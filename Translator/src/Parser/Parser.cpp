@@ -14,7 +14,9 @@ using token_type_t = Syntax::Token::Type;
 // todo print function call
 // todo all functions should return something
 
-Parser::Parser::Parser(Syntax::Lexer& lexer) : _lexer(lexer), _scope(Scope()) {
+Parser::Parser::Parser(Syntax::Lexer& lexer, Logging::Logger logger) : _lexer(lexer),
+                                                                       _scope(Scope()),
+                                                                       _logger(logger) {
     auto root = new Document;
     _tree = Tree(root);
 };
@@ -28,15 +30,15 @@ Tree Parser::Parser::parse() {
         if(curr.type() == token_type_t::Comment) {
             continue;
         } else if(curr.identifier() == token_id_t::Function) {
-            log("parse() - Parsing new function");
+            _logger << "parse() - Parsing new function" << "\n";
             _tree.getCurrent()->addChild( parseFunction() );
-            log("Function parsed");
+            _logger << "Function parsed" << "\n";
         } else {
             throw exception<ExpectedError>("Comment or Function", curr.symbol());
         }
-        log("Waiting for nil");
+        _logger << "Waiting for nil" << "\n";
     }
-    log("Returning tree");
+    _logger << "Returning tree" << "\n";
     _lexer.retrieveContext();
     return std::move(_tree);
 }
@@ -54,7 +56,7 @@ std::shared_ptr<Tree::Node> Parser::Parser::parseFunction() {
     for(auto child: parseCodeBlock(function_scope)) {
         function->addChild(child);
     }
-    log("Returning function");
+    _logger << "Returning function" << "\n";
     return function;
 }
 
@@ -116,40 +118,40 @@ std::vector<std::shared_ptr<Tree::Node>> Parser::Parser::parseCodeBlock(Scope& e
     std::vector<std::shared_ptr<Tree::Node>> expressions;
     auto current_scope = enveloping_scope.newSubScope();
 
-    log("Parsing code block");
+    _logger << "Parsing code block" << "\n";
     for (auto curr = _lexer.nextToken();
          curr.identifier() != token_id_t::CloseCurlyBracket;
          curr = _lexer.nextToken()) {
 
         if(curr.identifier() == token_id_t::Comment) {
-            log("Comment");
+            _logger << "Comment" << "\n";
             continue;
         } else if(curr.identifier() == token_id_t::Variable) {
-            log("Let");
+            _logger << "Let" << "\n";
             expressions.emplace_back(parseVariableDeclaration(current_scope));
         } else if(curr.identifier() == token_id_t::Return) {
-            log("Return");
+            _logger << "Return" << "\n";
             expressions.emplace_back(parseReturn(current_scope));
         } else if(curr.identifier() == token_id_t::Loop) {
-            log("Loop");
+            _logger << "Loop" << "\n";
             expressions.emplace_back(parseLoop(current_scope));
         } else if(curr.identifier() == token_id_t::If) {
-            log("If");
+            _logger << "If" << "\n";
             expressions.emplace_back(parseIf(current_scope));
         } else if(curr.identifier() == token_id_t::Concurrent) {
-            log("Concurrent");
+            _logger << "Concurrent" << "\n";
             expressions.emplace_back(parseConcurrent(current_scope));
         } else if(curr.identifier() == token_id_t::Critical) {
-            log("Critical");
+            _logger << "Critical" << "\n";
             expressions.emplace_back(parseCritical(current_scope));
         } else if(curr.identifier() == token_id_t::OpenCurlyBracker) {
-            log("Block");
+            _logger << "Block" << "\n";
             expressions.emplace_back(parseCodeBlockStatement(current_scope));
         } else if(curr.identifier() == token_id_t::Print) {
-            log("Print");
+            _logger << "Print" << "\n";
             expressions.emplace_back(parsePrintCall(current_scope));
         } else if(curr.identifier() == token_id_t::Identifier) {
-            log("Identifier");
+            _logger << "Identifier" << "\n";
             //todo make it another function, ones again unget_token is needed for that
             if(current_scope.isDefined(curr.symbol())) {
                 if(auto id = current_scope.find(curr.symbol()); id.type == Identifier::Type::function) {
@@ -172,7 +174,7 @@ std::vector<std::shared_ptr<Tree::Node>> Parser::Parser::parseCodeBlock(Scope& e
 
         }
     }
-    log("Code block parsed");
+    _logger << "Code block parsed" << "\n";
     _lexer.retrieveContext();
     return expressions;
 }
@@ -238,14 +240,14 @@ std::shared_ptr<Expression> Parser::Parser::parseExpression(Scope& enveloping_sc
     std::shared_ptr<Expression> left_side, right_side;
     std::string expr_operator = "";
 
-    log("Parsing expr");
+    _logger << "Parsing expr" << "\n";
     left_side = parseLeftSideOfExpr(enveloping_scope);
 
-    log("Left side parsed ", left_side->repr());
+    _logger << "Left side parsed " << left_side->repr() << "\n";
     auto curr = _lexer.nextToken();
     if(curr.identifier() == token_id_t::NewLine) {
         right_side = std::make_shared<Empty>();
-        log("New line - right side is empty");
+        _logger << "New line - right side is empty" << "\n";
     } else if(curr.identifier() == token_id_t::OpenCurlyBracker ||
             curr.identifier() == token_id_t::Comma) {
         _lexer.ungetToken(curr);
@@ -253,23 +255,23 @@ std::shared_ptr<Expression> Parser::Parser::parseExpression(Scope& enveloping_sc
     } else if(curr.type() != token_type_t::Operator) {
         throw exception<ExpectedError>("Operator", curr.symbol());
     } else {
-        log("Parsing right side");
+        _logger << "Parsing right side" << "\n";
         if(curr.identifier() == token_id_t::CloseBracket) {
             _lexer.ungetToken(curr);
             right_side = std::make_shared<Empty>();
         } else {
             expr_operator = curr.symbol();
-            log("Operator is ", expr_operator);
+            _logger << "Operator is " << expr_operator << "\n";
             if(!isOperatorValidInExpr(curr.identifier())) {
                 throw exception<ExpectedError>("+, -, *, /, <, >, ==, !=", expr_operator);
             }
 
             right_side = parseExpression(enveloping_scope);
-            log("Right side parsed ", right_side->repr());
+            _logger << "Right side parsed " << right_side->repr() << "\n";
         }
     }
 
-    log("Returning expr");
+    _logger << "Returning expr" << "\n";
     _lexer.retrieveContext();
     return std::make_shared<Expression>(left_side, right_side, expr_operator);
 }
@@ -279,10 +281,10 @@ std::shared_ptr<Expression> Parser::Parser::parseBracketExpression(Scope& envelo
 
     std::shared_ptr<Expression> left_side, right_side;
     std::string expr_operator = "";
-    log("Parsing in bracket expr");
+    _logger << "Parsing in bracket expr" << "\n";
 
     left_side = parseLeftSideOfExpr(enveloping_scope);
-    log("Left side parsed ", left_side->repr());
+    _logger << "Left side parsed " << left_side->repr() << "\n";
     auto curr = _lexer.nextToken();
     if(curr.identifier() == token_id_t::NewLine) {
         throw exception<ExpectedError>(")", "new line");
@@ -291,14 +293,14 @@ std::shared_ptr<Expression> Parser::Parser::parseBracketExpression(Scope& envelo
     } else if(curr.identifier() == token_id_t::CloseBracket) {
         right_side = std::make_shared<Empty>();
         _lexer.ungetToken(curr);
-        log(") encauntered - right side is empty");
+        _logger << ") encauntered - right side is empty" << "\n";
     } else {
         expr_operator = curr.symbol();
         // check if symbol is valid in this context
         // + - * /
-        log("Operator found: ", expr_operator);
+        _logger << "Operator found: " << expr_operator << "\n";
         right_side = parseExpression(enveloping_scope);
-        log("Right side parsed ", right_side->repr());
+        _logger << "Right side parsed " << right_side->repr() << "\n";
     }
 
     if(curr = _lexer.nextToken(); curr.identifier() != token_id_t::CloseBracket) {
@@ -315,13 +317,13 @@ std::shared_ptr<Expression> Parser::Parser::parseLeftSideOfExpr(Scope& envelopin
     _lexer.newContext(true, false);
     std::shared_ptr<Expression> left_side;
 
-    log("Parsing left side of the expr");
+    _logger << "Parsing left side of the expr" << "\n";
     auto curr = _lexer.nextToken();
     if(curr.identifier() == token_id_t::OpenBracket) {
         left_side = parseBracketExpression(enveloping_scope);
     } else if(curr.identifier() == token_id_t::ConstExpr) {
         left_side = std::make_shared<ConstExpr>(curr.symbol());
-        log("Const expr ", left_side->repr());
+        _logger << "Const expr " << left_side->repr() << "\n";
     } else if(curr.identifier() == token_id_t::Minus) {
         auto op = curr.symbol();
         left_side = std::make_shared<Expression>(
@@ -440,12 +442,12 @@ std::shared_ptr<Statement> Parser::Parser::parseConcurrent(Scope& enveloping_sco
 
 
 std::shared_ptr<Expression> Parser::Parser::parsePrintCall(Scope& enveloping_scope) {
-    log("in print call");
+    _logger << "in print call" << "\n";
     if(auto curr = _lexer.nextToken(); curr.identifier() != token_id_t::OpenBracket) {
-        log("Wrong symbol");
+        _logger << "Wrong symbol" << "\n";
         throw exception<ExpectedError>("(", curr.symbol());
     }
-    log("Parsing parameters");
+    _logger << "Parsing parameters" << "\n";
     auto pars = parsePrintParameters(enveloping_scope);
 
     _lexer.newContext(true, false);
@@ -460,13 +462,13 @@ PrintCall::args_t Parser::Parser::parsePrintParameters(Scope& enveloping_scope) 
     _lexer.newContext(true, true);
     std::vector<std::string> args = {};
 
-    log("Peeking for ) sign");
+    _logger << "Peeking for ) sign" << "\n";
     auto curr = _lexer.nextToken();
-    log("Got");
+    _logger << "Got" << "\n";
     if(curr.identifier() == token_id_t::CloseBracket) {
         return args;
     }
-    log("Starting to parse print parameters");
+    _logger << "Starting to parse print parameters" << "\n";
     _lexer.ungetToken(curr);
     while(true) {
         curr = _lexer.nextToken();
