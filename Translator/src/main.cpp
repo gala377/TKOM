@@ -5,6 +5,7 @@
 #include "Lexer/Token.h"
 #include "Parser/Parser.h"
 #include "Logger/Logger.h"
+#include "Translator/Go.h"
 
 #include <sstream>
 #include <string>
@@ -29,6 +30,11 @@ int main() {
     std::cout << tree;
 
     std::cout << tree.getCurrent()->parse();
+
+    Translation::Go translator;
+    std::cout << "\nTRANSLATOR OUTPUT:\n";
+    std::cout << translator.translate(tree);
+
     return 0;
 }
 

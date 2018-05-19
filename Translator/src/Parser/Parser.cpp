@@ -11,8 +11,6 @@ using namespace Parser;
 using token_id_t = Syntax::Token::Identifier;
 using token_type_t = Syntax::Token::Type;
 
-// todo print function call
-// todo all functions should return something
 
 Parser::Parser::Parser(Syntax::Lexer& lexer, Logging::Logger logger) : _lexer(lexer),
                                                                        _scope(Scope()),
