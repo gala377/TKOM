@@ -159,6 +159,10 @@ std::vector<std::shared_ptr<Tree::Node>> Parser::Parser::parseCodeBlock(Scope& e
                     expressions.emplace_back(std::make_shared<Assignment>(
                             std::make_shared<VariableCall>(id.symbol),
                             parseExpression(current_scope)));
+                } else {
+                    // todo remove redundancy - remember about DRY
+                    _lexer.ungetToken(curr);
+                    expressions.emplace_back(parseFunctionCall(current_scope));
                 }
             } else {
                 _lexer.ungetToken(curr);
@@ -360,6 +364,10 @@ std::shared_ptr<Expression> Parser::Parser::parseLeftSideOfExpr(Scope& envelopin
         if(enveloping_scope.isDefined(curr.symbol())) {
             if(auto id = enveloping_scope.find(curr.symbol()); id.type == Identifier::Type::variable) {
                 left_side = std::make_shared<VariableCall>(curr.symbol());
+            } else {
+                // todo remove redundacy - remember about DRY
+                _lexer.ungetToken(curr);
+                left_side = parseFunctionCall(enveloping_scope);
             }
         } else {
             _lexer.ungetToken(curr);

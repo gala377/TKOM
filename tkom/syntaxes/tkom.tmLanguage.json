@@ -3,9 +3,6 @@
     "name": "tkom language",
     "scopeName": "source.tkom",
     "fileTypes": ["tkom", "conc"],
-    "variables": {
-        "identifier":  "[A-Za-z_]([a-zA-Z0-9]|_)*"
-    },
     "patterns": [
         {
             "match": "(?<=^)(fn)(?=\\s)",
@@ -16,20 +13,16 @@
             "name": "variable.declaration.keyword.tkom"
         },
         {
-            "match": "\\s*//.*",
+            "match": "#.*",
             "name": "comment.line.tkom"
         },
         {
-            "match": "(?<=fn\\s)([A-z][A-z0-9]*)(.*?)\\s*\\{",
+            "match": "(?<=fn\\s)([A-z][A-z0-9]*)(?=((.*?)\\s*\\{))",
             "name": "function.identifier.tkom"
         },
         {
             "match": "[A-Za-z_]([a-zA-Z0-9]|_)*",
             "name": "identifier.tkom"
-        },
-        {
-            "match": "{{identifier}}",
-            "name": "identifier.test.tkom"
         }
     ]    
 }

@@ -259,7 +259,14 @@ std::string Translation::Go::parseConcurrent(ptr_t<Parser::Statement> concurrent
         res += addIntend("go func() {\n");
         incIntend();
         res += addIntend("defer " + wg_name + ".Done()\n");
-        res += parseCodeBlock(child.get());
+        if(auto expr = dynamic_cast<Parser::Expression*>(child.get()); expr != nullptr) {
+            res += parseExpr(expr);
+        } else if(auto casted = dynamic_cast<Parser::Statement*>(child.get());
+                casted != nullptr) {
+            res += parseStatement(casted);
+        } else {
+            throw std::runtime_error("unexpected node in code block");
+        }
         decIntend();
         res += addIntend("}()\n");
     }

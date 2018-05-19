@@ -13,11 +13,6 @@
       <string>tkom</string>
       <string>conc</string>
     </array>
-    <key>variables</key>
-    <dict>
-      <key>identifier</key>
-      <string>[A-Za-z_]([a-zA-Z0-9]|_)*</string>
-    </dict>
     <key>patterns</key>
     <array>
       <dict>
@@ -34,13 +29,13 @@
       </dict>
       <dict>
         <key>match</key>
-        <string>\s*//.*</string>
+        <string>#.*</string>
         <key>name</key>
         <string>comment.line.tkom</string>
       </dict>
       <dict>
         <key>match</key>
-        <string>(?&lt;=fn\s)([A-z][A-z0-9]*)(.*?)\s*\{</string>
+        <string>(?&lt;=fn\s)([A-z][A-z0-9]*)(?=((.*?)\s*\{))</string>
         <key>name</key>
         <string>function.identifier.tkom</string>
       </dict>
@@ -49,12 +44,6 @@
         <string>[A-Za-z_]([a-zA-Z0-9]|_)*</string>
         <key>name</key>
         <string>identifier.tkom</string>
-      </dict>
-      <dict>
-        <key>match</key>
-        <string>{{identifier}}</string>
-        <key>name</key>
-        <string>identifier.test.tkom</string>
       </dict>
     </array>
   </dict>
