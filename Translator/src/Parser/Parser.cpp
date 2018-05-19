@@ -32,6 +32,7 @@ Tree Parser::Parser::parse() {
             _tree.getCurrent()->addChild( parseFunction() );
             _logger << "Function parsed" << "\n";
         } else {
+            _logger << "Before expected in function " << curr.symbol() << "\n";
             throw exception<ExpectedError>("Comment or Function", curr.symbol());
         }
         _logger << "Waiting for nil" << "\n";
@@ -166,6 +167,10 @@ std::vector<std::shared_ptr<Tree::Node>> Parser::Parser::parseCodeBlock(Scope& e
                             std::make_shared<VariableCall>(id.symbol),
                             parseExpression(current_scope)));
                 }
+            } else if(curr.symbol().length() >= _MIN_LIB_FUNC_CALL_PREF_LEN
+                      && curr.symbol().substr(0, 8) == "___from_") {
+                _lexer.ungetToken(curr);
+                expressions.emplace_back(parseLibraryCall(current_scope));
             } else {
                 throw exception<UndefinedIdentifier>(curr.symbol());
             }
@@ -190,6 +195,7 @@ FunctionCall::args_t Parser::Parser::parseFunctionParameters(Scope& enveloping_s
         throw exception<ExpectedError>("(", curr.symbol());
     }
     if(curr = _lexer.nextToken(); curr.identifier() == token_id_t::CloseBracket) {
+        _lexer.retrieveContext();
         return args;
     }
     _lexer.ungetToken(curr);
@@ -336,6 +342,10 @@ std::shared_ptr<Expression> Parser::Parser::parseLeftSideOfExpr(Scope& envelopin
             } else {
                 left_side = std::make_shared<VariableCall>(curr.symbol());
             }
+        } else if(curr.symbol().length() >= _MIN_LIB_FUNC_CALL_PREF_LEN
+                  && curr.symbol().substr(0, 8) == "___from_") {
+            _lexer.ungetToken(curr);
+            left_side = parseLibraryCall(enveloping_scope);
         } else {
             throw exception<UndefinedIdentifier>(curr.symbol());
         }
@@ -422,7 +432,7 @@ std::shared_ptr<Statement> Parser::Parser::parseCritical(Scope& enveloping_scope
     }
 
     return std::make_shared<BlockStatement>(
-            "critical_IN_PROGRESS",
+            "critical",
             parseCodeBlock(curr_scope));
 }
 
@@ -434,7 +444,7 @@ std::shared_ptr<Statement> Parser::Parser::parseConcurrent(Scope& enveloping_sco
     }
 
     return std::make_shared<BlockStatement>(
-            "concurrent_IN_PROGRESS",
+            "concurrent",
             parseCodeBlock(curr_scope));
 }
 
@@ -446,7 +456,7 @@ std::shared_ptr<Expression> Parser::Parser::parsePrintCall(Scope& enveloping_sco
         throw exception<ExpectedError>("(", curr.symbol());
     }
     _logger << "Parsing parameters" << "\n";
-    auto pars = parsePrintParameters(enveloping_scope);
+    auto pars = parseLibCallParameters(enveloping_scope);
 
     _lexer.newContext(true, false);
     if(auto curr = _lexer.nextToken(); curr.identifier() != token_id_t::NewLine) {
@@ -456,7 +466,7 @@ std::shared_ptr<Expression> Parser::Parser::parsePrintCall(Scope& enveloping_sco
     return std::make_shared<PrintCall>(pars);
 }
 
-PrintCall::args_t Parser::Parser::parsePrintParameters(Scope& enveloping_scope) {
+PrintCall::args_t Parser::Parser::parseLibCallParameters(Scope& enveloping_scope) {
     _lexer.newContext(true, true);
     std::vector<std::string> args = {};
 
@@ -464,6 +474,7 @@ PrintCall::args_t Parser::Parser::parsePrintParameters(Scope& enveloping_scope) 
     auto curr = _lexer.nextToken();
     _logger << "Got" << "\n";
     if(curr.identifier() == token_id_t::CloseBracket) {
+        _lexer.retrieveContext();
         return args;
     }
     _logger << "Starting to parse print parameters" << "\n";
@@ -485,4 +496,29 @@ PrintCall::args_t Parser::Parser::parsePrintParameters(Scope& enveloping_scope) 
     }
     _lexer.retrieveContext();
     return args;
+}
+
+
+std::shared_ptr<Expression> Parser::Parser::parseLibraryCall(Scope& enveloping_scope) {
+    auto curr = _lexer.nextToken();
+    auto func_call = curr.symbol().substr(
+            std::string("___from_").length());
+
+    auto delimeter = func_call.find("_");
+    if(delimeter == std::string::npos) {
+        throw exception<ExpectedError>("_ as delimiter in lib func call", "");
+    }
+
+    auto library = func_call.substr(0, delimeter);
+    auto func = func_call.substr(delimeter+1);
+
+    if(curr = _lexer.nextToken(); curr.identifier() != token_id_t::OpenBracket) {
+        _logger << "Wrong symbol" << "\n";
+        throw exception<ExpectedError>("(", curr.symbol());
+    }
+    auto args = parseLibCallParameters(enveloping_scope);
+    return std::make_shared<LibraryFunctionCall>(
+            library,
+            func,
+            args);
 }

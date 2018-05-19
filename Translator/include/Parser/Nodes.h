@@ -23,7 +23,7 @@ namespace Parser {
         std::string parse() const override;
         std::string repr() const override;
 
-        const std::string& symbol() const;
+        virtual const std::string& symbol() const;
 
     protected:
         std::string _symbol;
@@ -116,7 +116,7 @@ namespace Parser {
 
 
 
-    class VariableCall:  public Expression, VariableDeclaration {
+    class VariableCall:  public Expression, public VariableDeclaration {
     public:
         VariableCall(std::string symbol);
 
@@ -125,7 +125,7 @@ namespace Parser {
     };
 
 
-    class FunctionCall: public Expression, FunctionDeclaration {
+    class FunctionCall: public Expression, public FunctionDeclaration {
     public:
         using args_t = std::vector<std::string>;
 
@@ -136,9 +136,21 @@ namespace Parser {
     };
 
 
+    class LibraryFunctionCall: public FunctionCall {
+    public:
+        LibraryFunctionCall(std::string library, std::string symbol, args_t args);
+
+        std::string library() const;
+        std::string parse() const override;
+
+    protected:
+        std::string _library;
+    };
+
+
     class PrintCall: public FunctionCall {
     public:
-        PrintCall(args_t args);
+        explicit PrintCall(args_t args);
     };
 
 

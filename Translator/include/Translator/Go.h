@@ -5,6 +5,9 @@
 #ifndef TRANSLATOR_GO_H
 #define TRANSLATOR_GO_H
 
+#include <map>
+#include <set>
+
 #include <Parser/Nodes.h>
 #include "Translator.h"
 
@@ -27,8 +30,16 @@ namespace Translation {
 
         bool _return_at_the_end_of_func = false;
         std::uint32_t _critical_count = 0;
+        std::uint32_t _wait_group_count = 0;
 
         bool _main_func_present = false;
+
+        const std::map<std::string, std::string> _LIBRARY_FUNCTIONS = {
+                {"Now", "time"},
+                {"Sleep", "time"},
+        };
+        std::set<std::string> _imports;
+
 
         // Parsing function definitions
         std::string parseDocument(Node_ptr node);
@@ -36,19 +47,23 @@ namespace Translation {
 
         std::string parseFunctionDeclaration(Node_ptr node);
         void assertFlagsAreZeroed();
+
         std::string functionHeader(ptr_t<Parser::FunctionDeclaration> func);
+        std::string mutexesDeclarations(std::uint32_t n);
+
         std::string functionPrelude(ptr_t<Parser::FunctionDeclaration> func);
         std::string returnedFunction(ptr_t<Parser::FunctionDeclaration> func);
         std::string funcConstructor(ptr_t<Parser::FunctionDeclaration> func);
 
         std::string parseMain(ptr_t<Parser::FunctionDeclaration> func);
 
+
         std::string parseCodeBlock(Node_ptr node);
-        std::string parseExpr(Node_ptr node);
+        std::string parseExpr(ptr_t<Parser::Expression> expr);
+        std::string parseStatement(ptr_t<Parser::Statement> statement);
 
-
-        std::string parseCritical(Node_ptr critical, std::uint32_t mut_id);
-        std::string parseConcurrent(Node_ptr concurrent);
+        std::string parseCritical(ptr_t<Parser::Statement> critical);
+        std::string parseConcurrent(ptr_t<Parser::Statement> concurrent);
 
         std::string addIntend(std::string original);
 

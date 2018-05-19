@@ -235,7 +235,7 @@ std::string FunctionCall::parse() const {
                       });
         res += *(_args.end() - 1);
     }
-    res += ")";
+    res += ")\n";
     return res;
 }
 
@@ -274,7 +274,7 @@ Statement::Statement(std::string symbol, std::shared_ptr<Expression> expr): Symb
 
 std::string Statement::parse() const {
     auto expr_part = _expr ? _expr->parse(): "";
-    return Symbol::parse() + " " + expr_part;
+    return Symbol::parse() + " " + expr_part + "\n";
 }
 
 std::string Statement::repr() const {
@@ -356,3 +356,17 @@ std::string IfStatement::parse() const {
     return res;
 }
 
+
+LibraryFunctionCall::LibraryFunctionCall(std::string library,
+                                         std::string symbol,
+                                         FunctionCall::args_t args): FunctionCall(std::move(symbol),
+                                                                                  std::move(args)),
+                                                                     _library(std::move(library)) {}
+
+std::string LibraryFunctionCall::library() const {
+    return _library;
+}
+
+std::string LibraryFunctionCall::parse() const {
+    return _library + "." + FunctionCall::parse();
+}

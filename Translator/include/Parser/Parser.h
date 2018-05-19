@@ -25,6 +25,7 @@ namespace Parser {
         Tree _tree;
         Scope _scope;
 
+        const std::uint32_t _MIN_LIB_FUNC_CALL_PREF_LEN = 14;
         const std::set<token_id_t> _EXPR_OPERATORS = {
                 token_id_t::Addition, token_id_t::Minus,
                 token_id_t::Multiplication, token_id_t::Division,
@@ -56,7 +57,9 @@ namespace Parser {
         FunctionCall::args_t parseFunctionParameters(Scope& enveloping_scope);
 
         std::shared_ptr<Expression> parsePrintCall(Scope& enveloping_scope);
-        PrintCall::args_t parsePrintParameters(Scope& enveloping_scope);
+        PrintCall::args_t parseLibCallParameters(Scope& enveloping_scope);
+
+        std::shared_ptr<Expression> parseLibraryCall(Scope& enveloping_scope);
 
         // Statements
 
