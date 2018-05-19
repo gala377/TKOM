@@ -180,9 +180,11 @@ std::shared_ptr<Expression> Parser::Parser::parseFunctionCall(Scope& enveloping_
                     id.symbol,
                     args);
         }
-    } else if(curr.symbol().substr(0, 8) == "___from_") {
+    } else if(curr.symbol().substr(0, std::string("___from_").length()) == "___from_") {
         _lexer.ungetToken(curr);
         return parseLibraryCall(enveloping_scope);
+    } else if(curr.symbol() == "___parse_raw") {
+        return parseRawFunction();
     }
     // todo make it another exception CouldNotParseFunction
     // to catch in higher function and rethrow as proper exception
@@ -216,7 +218,24 @@ FunctionCall::args_t Parser::Parser::parseFunctionParameters(Scope& enveloping_s
     return args;
 }
 
+std::shared_ptr<Expression> Parser::Parser::parseRawFunction() {
+    auto curr = _lexer.nextToken();
+    if(curr.identifier() != token_id_t::OpenBracket) {
+        throw exception<ExpectedError>("(", curr.symbol());
+    }
+    curr = _lexer.nextToken();
+    if(curr.identifier() != token_id_t::String) {
+        throw exception<ExpectedError>("string const", curr.symbol());
+    }
+    auto arg = curr.symbol();
 
+    curr = _lexer.nextToken();
+    if(curr.identifier() != token_id_t::CloseBracket) {
+        throw exception<ExpectedError>(")", curr.symbol());
+    }
+    return std::make_shared<RawParseCall>(std::vector<std::string>{arg});
+
+}
 
 std::shared_ptr<Expression> Parser::Parser::parseVariableDeclaration(Scope& enveloping_scope) {
     _lexer.newContext(true, false);

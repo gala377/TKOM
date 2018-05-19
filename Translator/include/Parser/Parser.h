@@ -59,7 +59,7 @@ namespace Parser {
         PrintCall::args_t parseLibCallParameters(Scope& enveloping_scope);
 
         std::shared_ptr<Expression> parseLibraryCall(Scope& enveloping_scope);
-
+        std::shared_ptr<Expression> parseRawFunction();
         // Statements
 
         std::shared_ptr<Statement> parseCodeBlockStatement(Scope& enveloping_scope);
