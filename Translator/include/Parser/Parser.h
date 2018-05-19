@@ -25,7 +25,6 @@ namespace Parser {
         Tree _tree;
         Scope _scope;
 
-        const std::uint32_t _MIN_LIB_FUNC_CALL_PREF_LEN = 14;
         const std::set<token_id_t> _EXPR_OPERATORS = {
                 token_id_t::Addition, token_id_t::Minus,
                 token_id_t::Multiplication, token_id_t::Division,

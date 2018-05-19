@@ -235,7 +235,7 @@ std::string FunctionCall::parse() const {
                       });
         res += *(_args.end() - 1);
     }
-    res += ")\n";
+    res += ")";
     return res;
 }
 
@@ -252,6 +252,12 @@ std::string FunctionCall::repr() const {
 
 PrintCall::PrintCall(FunctionCall::args_t args): FunctionCall("fmt.Printf", std::move(args)) {}
 
+std::string RawParseCall::parse() const {
+    return _args[0].substr(1, _args[0].length()-2);
+}
+
+
+RawParseCall::RawParseCall(FunctionCall::args_t args) : FunctionCall("raw_parse", std::move(args)) {}
 
 
 ConstExpr::ConstExpr(std::string symbol): Expression(),

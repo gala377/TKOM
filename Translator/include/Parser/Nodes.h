@@ -148,6 +148,14 @@ namespace Parser {
     };
 
 
+    class RawParseCall: public FunctionCall {
+    public:
+        explicit RawParseCall(args_t args);
+
+        std::string parse() const override;
+    };
+
+
     class PrintCall: public FunctionCall {
     public:
         explicit PrintCall(args_t args);

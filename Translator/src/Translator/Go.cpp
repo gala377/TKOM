@@ -196,12 +196,10 @@ std::string Translation::Go::parseExpr(ptr_t<Parser::Expression> expr) {
     std::cout << "parsing expr\n";
     if(dynamic_cast<Parser::PrintCall*>(expr)) {
         _imports.insert("fmt");
-        return addIntend(expr->parse());
-    }
-    if(auto call = dynamic_cast<Parser::LibraryFunctionCall*>(expr); call != nullptr) {
+    } else if(auto call = dynamic_cast<Parser::LibraryFunctionCall*>(expr); call != nullptr) {
         _imports.insert(call->library());
     }
-    return addIntend(expr->parse());
+    return addIntend(expr->parse() + "\n");
 }
 
 std::string Translation::Go::parseStatement(Translation::Go::ptr_t<Parser::Statement> statement) {

@@ -151,15 +151,8 @@ std::vector<std::shared_ptr<Tree::Node>> Parser::Parser::parseCodeBlock(Scope& e
             expressions.emplace_back(parsePrintCall(current_scope));
         } else if(curr.identifier() == token_id_t::Identifier) {
             _logger << "Identifier" << "\n";
-            //todo make it another function, ones again unget_token is needed for that
             if(current_scope.isDefined(curr.symbol())) {
-                if(auto id = current_scope.find(curr.symbol()); id.type == Identifier::Type::function) {
-                    auto args = parseFunctionParameters(current_scope);
-                    expressions.emplace_back(std::make_shared<FunctionCall>(
-                            id.symbol,
-                            args));
-                } else {
-                    //todo func parse_var_identifier
+                if(auto id = current_scope.find(curr.symbol()); id.type == Identifier::Type::variable) {
                     if(curr = _lexer.nextToken(); curr.identifier() != token_id_t::Assignment) {
                         throw exception<ExpectedError>("=", curr.symbol());
                     }
@@ -167,14 +160,10 @@ std::vector<std::shared_ptr<Tree::Node>> Parser::Parser::parseCodeBlock(Scope& e
                             std::make_shared<VariableCall>(id.symbol),
                             parseExpression(current_scope)));
                 }
-            } else if(curr.symbol().length() >= _MIN_LIB_FUNC_CALL_PREF_LEN
-                      && curr.symbol().substr(0, 8) == "___from_") {
-                _lexer.ungetToken(curr);
-                expressions.emplace_back(parseLibraryCall(current_scope));
             } else {
-                throw exception<UndefinedIdentifier>(curr.symbol());
+                _lexer.ungetToken(curr);
+                expressions.emplace_back(parseFunctionCall(current_scope));
             }
-
         }
     }
     _logger << "Code block parsed" << "\n";
@@ -182,9 +171,22 @@ std::vector<std::shared_ptr<Tree::Node>> Parser::Parser::parseCodeBlock(Scope& e
     return expressions;
 }
 
-
 std::shared_ptr<Expression> Parser::Parser::parseFunctionCall(Scope& enveloping_scope) {
-    return std::shared_ptr<Expression>();
+    auto curr = _lexer.nextToken();
+    if(enveloping_scope.isDefined(curr.symbol())) {
+        if(auto id = enveloping_scope.find(curr.symbol()); id.type == Identifier::Type::function) {
+            auto args = parseFunctionParameters(enveloping_scope);
+            return std::make_shared<FunctionCall>(
+                    id.symbol,
+                    args);
+        }
+    } else if(curr.symbol().substr(0, 8) == "___from_") {
+        _lexer.ungetToken(curr);
+        return parseLibraryCall(enveloping_scope);
+    }
+    // todo make it another exception CouldNotParseFunction
+    // to catch in higher function and rethrow as proper exception
+    throw exception<UndefinedIdentifier>(curr.symbol());
 }
 
 FunctionCall::args_t Parser::Parser::parseFunctionParameters(Scope& enveloping_scope) {
@@ -213,6 +215,7 @@ FunctionCall::args_t Parser::Parser::parseFunctionParameters(Scope& enveloping_s
     _lexer.retrieveContext();
     return args;
 }
+
 
 
 std::shared_ptr<Expression> Parser::Parser::parseVariableDeclaration(Scope& enveloping_scope) {
@@ -336,18 +339,12 @@ std::shared_ptr<Expression> Parser::Parser::parseLeftSideOfExpr(Scope& envelopin
                 op);
     } else if(curr.identifier() == token_id_t::Identifier) {
         if(enveloping_scope.isDefined(curr.symbol())) {
-            if(auto id = enveloping_scope.find(curr.symbol()); id.type == Identifier::Type::function) {
-                auto args = parseFunctionParameters(enveloping_scope);
-                left_side = std::make_shared<FunctionCall>(id.symbol, args);
-            } else {
+            if(auto id = enveloping_scope.find(curr.symbol()); id.type == Identifier::Type::variable) {
                 left_side = std::make_shared<VariableCall>(curr.symbol());
             }
-        } else if(curr.symbol().length() >= _MIN_LIB_FUNC_CALL_PREF_LEN
-                  && curr.symbol().substr(0, 8) == "___from_") {
-            _lexer.ungetToken(curr);
-            left_side = parseLibraryCall(enveloping_scope);
         } else {
-            throw exception<UndefinedIdentifier>(curr.symbol());
+            _lexer.ungetToken(curr);
+            left_side = parseFunctionCall(enveloping_scope);
         }
     } else {
         throw exception<UnexpectedError>(curr.symbol());
@@ -497,6 +494,8 @@ PrintCall::args_t Parser::Parser::parseLibCallParameters(Scope& enveloping_scope
     _lexer.retrieveContext();
     return args;
 }
+
+
 
 
 std::shared_ptr<Expression> Parser::Parser::parseLibraryCall(Scope& enveloping_scope) {
