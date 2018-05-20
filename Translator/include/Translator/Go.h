@@ -65,6 +65,8 @@ namespace Translation {
         std::string parseCritical(ptr_t<Parser::Statement> critical);
         std::string parseConcurrent(ptr_t<Parser::Statement> concurrent);
 
+        std::string parseIf(ptr_t<Parser::Statement> if_node);
+
         std::string addIntend(std::string original);
 
         // Intend stuff

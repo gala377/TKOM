@@ -362,6 +362,10 @@ std::string IfStatement::parse() const {
     return res;
 }
 
+std::shared_ptr<ElseStatement> IfStatement::else_statement() const {
+    return _else;
+}
+
 
 LibraryFunctionCall::LibraryFunctionCall(std::string library,
                                          std::string symbol,

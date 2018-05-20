@@ -211,6 +211,7 @@ namespace Parser {
         void setElse(std::shared_ptr<ElseStatement> else_statement);
 
         std::string parse() const override;
+        std::shared_ptr<ElseStatement> else_statement() const;
 
     private:
         std::shared_ptr<ElseStatement> _else;

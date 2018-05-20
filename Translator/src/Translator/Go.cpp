@@ -221,8 +221,7 @@ std::string Translation::Go::parseStatement(Translation::Go::ptr_t<Parser::State
     } else if(statement->symbol() == "concurrent") {
         return parseConcurrent(statement);
     } else if(statement->symbol() == "if") {
-        throw std::runtime_error("Implement me! if");
-        // todo
+        return parseIf(statement);
     } else if(statement->symbol() == "") {
         std::string res = addIntend("{\n");
         incIntend();
@@ -275,6 +274,51 @@ std::string Translation::Go::parseConcurrent(ptr_t<Parser::Statement> concurrent
     return res;
 }
 
+
+std::string Translation::Go::parseIf(Translation::Go::ptr_t<Parser::Statement> if_node) {
+    auto casted = dynamic_cast<Parser::IfStatement*>(if_node);
+    if(casted == nullptr) {
+        throw std::runtime_error("Expected if node");
+    }
+    std::string res = addIntend("if ");
+    res += casted->expr()->parse();
+    res += " {\n";
+
+    if(casted->else_statement() == nullptr) {
+        incIntend();
+        res += parseCodeBlock(casted);
+        decIntend();
+        res += addIntend("}\n\n");
+    } else {
+        // else is not null
+        // get if without else and parse it
+        auto children = casted->getChildren();
+        auto mock = std::make_shared<Parser::IfStatement>(
+                casted->expr(),
+                std::vector<std::shared_ptr<Parser::Tree::Node>>(
+                        children.begin(), children.end()-1));
+        incIntend();
+        res += parseCodeBlock(mock.get());
+        decIntend();
+        res += addIntend("} ");
+        // parse else
+        res += "else ";
+        auto else_s = casted->else_statement();
+        if(dynamic_cast<Parser::IfStatement*>(else_s->expr().get()) != nullptr) {
+            // it's else if - oh boy
+            res += parseIf(dynamic_cast<Parser::Statement*>(else_s->expr().get()));
+        } else {
+            // normal else
+            res += "{\n";
+            incIntend();
+            res += parseCodeBlock(else_s->expr().get());
+            decIntend();
+            res += "}\n\n";
+        }
+    }
+    return res;
+
+}
 
 
 std::string Translation::Go::addIntend(std::string original) {

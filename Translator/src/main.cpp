@@ -13,7 +13,7 @@
 std::string tokenToStr(const Syntax::Token::Token&);
 
 int main() {
-    Source src("test2.txt");
+    Source src("test2.conc");
     Logging::Logger lexer_log(std::cout, "[Lexer]: ");
     Syntax::Lexer lex(src, lexer_log);
 //    for(auto token = lex.nextToken();
