@@ -13,16 +13,60 @@
             "name": "variable.declaration.keyword.tkom"
         },
         {
+            "match": "(\\s*|^)(return)(?=\\s)",
+            "name": "return.keyword.tkom"
+        },
+        {
+            "match": "(\\s*|^)(critical)(?=\\s)",
+            "name": "critical.keyword.tkom"
+        },
+        {
+            "match": "(\\s*|^)(concurrent)(?=\\s)",
+            "name": "concurrent.keyword.tkom"
+        },
+        {
+            "match": "(\\s*|^)(loop)(?=\\s)",
+            "name": "loop.keyword.tkom"
+        },
+        {
+            "match": "(\\s*|^)(else)(?=\\s)",
+            "name": "else.keyword.tkom"
+        },
+        {
+            "match": "(\\s*|^)(if)(?=\\s)",
+            "name": "if.keyword.tkom"
+        },
+        {
             "match": "#.*",
             "name": "comment.line.tkom"
         },
         {
-            "match": "(?<=fn\\s)([A-z][A-z0-9]*)(?=((.*?)\\s*\\{))",
+            "match": "(?<=fn\\s)([A-z_][A-z0-9]*)(?=((.*?)\\s*\\{))",
             "name": "function.identifier.tkom"
         },
         {
-            "match": "[A-Za-z_]([a-zA-Z0-9]|_)*",
-            "name": "identifier.tkom"
+            "match": "({|})",
+            "name": "curly.brackets.operator.tkom"
+        },
+        {
+            "match": "(\\(|\\))",
+            "name": "brackets.operator.tkom"
+        },
+        {
+            "match": "\".*\"",
+            "name": "string.constexpr.tkom"
+        },
+        {
+            "match": "\\-*[0-9]+",
+            "name": "int.constexpr.tkom"
+        },
+        {
+            "match": "([A-z_][A-Za-z0-9_]+)(?=\\()",
+            "name": "function.call.tkom"
+        },
+        {
+            "match": "([A-z_][A-Za-z0-9_]+)(?!\\()",
+            "name": "variable.call.tkom"
         }
     ]    
 }

@@ -19,7 +19,8 @@ fn print_with_wait_critical(to_print, wait) {
     }
     return 0
 }
-# comment 
+
+# delete in later release 
 fn test() {
     return 0
 }
@@ -27,7 +28,6 @@ fn test() {
 fn main() {
     print_int(0)
     print_with_wait(1, 2000)
-
     concurrent {
         {
             print_with_wait(9, 10000)

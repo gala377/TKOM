@@ -29,21 +29,87 @@
       </dict>
       <dict>
         <key>match</key>
+        <string>(\s*|^)(return)(?=\s)</string>
+        <key>name</key>
+        <string>return.keyword.tkom</string>
+      </dict>
+      <dict>
+        <key>match</key>
+        <string>(\s*|^)(critical)(?=\s)</string>
+        <key>name</key>
+        <string>critical.keyword.tkom</string>
+      </dict>
+      <dict>
+        <key>match</key>
+        <string>(\s*|^)(concurrent)(?=\s)</string>
+        <key>name</key>
+        <string>concurrent.keyword.tkom</string>
+      </dict>
+      <dict>
+        <key>match</key>
+        <string>(\s*|^)(loop)(?=\s)</string>
+        <key>name</key>
+        <string>loop.keyword.tkom</string>
+      </dict>
+      <dict>
+        <key>match</key>
+        <string>(\s*|^)(else)(?=\s)</string>
+        <key>name</key>
+        <string>else.keyword.tkom</string>
+      </dict>
+      <dict>
+        <key>match</key>
+        <string>(\s*|^)(if)(?=\s)</string>
+        <key>name</key>
+        <string>if.keyword.tkom</string>
+      </dict>
+      <dict>
+        <key>match</key>
         <string>#.*</string>
         <key>name</key>
         <string>comment.line.tkom</string>
       </dict>
       <dict>
         <key>match</key>
-        <string>(?&lt;=fn\s)([A-z][A-z0-9]*)(?=((.*?)\s*\{))</string>
+        <string>(?&lt;=fn\s)([A-z_][A-z0-9]*)(?=((.*?)\s*\{))</string>
         <key>name</key>
         <string>function.identifier.tkom</string>
       </dict>
       <dict>
         <key>match</key>
-        <string>[A-Za-z_]([a-zA-Z0-9]|_)*</string>
+        <string>({|})</string>
         <key>name</key>
-        <string>identifier.tkom</string>
+        <string>curly.brackets.operator.tkom</string>
+      </dict>
+      <dict>
+        <key>match</key>
+        <string>(\(|\))</string>
+        <key>name</key>
+        <string>brackets.operator.tkom</string>
+      </dict>
+      <dict>
+        <key>match</key>
+        <string>".*"</string>
+        <key>name</key>
+        <string>string.constexpr.tkom</string>
+      </dict>
+      <dict>
+        <key>match</key>
+        <string>\-*[0-9]+</string>
+        <key>name</key>
+        <string>int.constexpr.tkom</string>
+      </dict>
+      <dict>
+        <key>match</key>
+        <string>([A-z_][A-Za-z0-9_]+)(?=\()</string>
+        <key>name</key>
+        <string>function.call.tkom</string>
+      </dict>
+      <dict>
+        <key>match</key>
+        <string>([A-z_][A-Za-z0-9_]+)(?!\()</string>
+        <key>name</key>
+        <string>variable.call.tkom</string>
       </dict>
     </array>
   </dict>
