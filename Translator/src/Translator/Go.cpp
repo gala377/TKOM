@@ -178,7 +178,10 @@ std::string Translation::Go::mutexesDeclarations(std::uint32_t n) {
 std::string Translation::Go::parseCodeBlock(Translation::Go::Node_ptr node) {
     std::cout << "parsing code block\n";
     std::string res;
+    std::cout << "Is node a null_ptr " << (node == nullptr) << "\n";
+    std::cout << "current node is " + node->repr() + "\n";
     for(const auto& child: node->getChildren()) {
+        std::cout << "Next child " + child->repr() + "\n";
         if(auto expr = dynamic_cast<Parser::Expression*>(child.get()); expr != nullptr) {
             res += parseExpr(expr);
         } else if(auto casted = dynamic_cast<Parser::Statement*>(child.get());
@@ -284,38 +287,50 @@ std::string Translation::Go::parseIf(Translation::Go::ptr_t<Parser::Statement> i
     res += casted->expr()->parse();
     res += " {\n";
 
+    std::cout << "parsed if part\n";
     if(casted->else_statement() == nullptr) {
+        std::cout << "else is null\n";
         incIntend();
         res += parseCodeBlock(casted);
         decIntend();
         res += addIntend("}\n\n");
+        std::cout << "parsed if code block\n";
     } else {
         // else is not null
         // get if without else and parse it
+        std::cout << "else is not null\n";
         auto children = casted->getChildren();
+        std::cout << "Copied children\n";
         auto mock = std::make_shared<Parser::IfStatement>(
                 casted->expr(),
                 std::vector<std::shared_ptr<Parser::Tree::Node>>(
                         children.begin(), children.end()-1));
+        std::cout << "Mock if created\n";
         incIntend();
         res += parseCodeBlock(mock.get());
         decIntend();
         res += addIntend("} ");
+        std::cout << "Parsed mocked if\n";
         // parse else
+        std::cout << "Parsing else\n";
         res += "else ";
-        auto else_s = casted->else_statement();
+        auto else_s = children[children.size()-1];
         if(dynamic_cast<Parser::IfStatement*>(else_s->expr().get()) != nullptr) {
             // it's else if - oh boy
+            std::cout << "Parsing else if \n";
             res += parseIf(dynamic_cast<Parser::Statement*>(else_s->expr().get()));
         } else {
             // normal else
+            std::cout << "Just a normal else\n";
             res += "{\n";
             incIntend();
             res += parseCodeBlock(else_s->expr().get());
             decIntend();
             res += "}\n\n";
+            std::cout << "Code block parsed";
         }
     }
+    std::cout << "returning parsed if statement\n";
     return res;
 
 }
