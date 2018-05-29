@@ -296,11 +296,11 @@ std::string Translation::Go::parseIf(Translation::Go::ptr_t<Parser::Statement> i
         res += addIntend("}\n\n");
         std::cout << "parsed if code block\n";
     } else {
-        // else is not null
-        // get if without else and parse it
         std::cout << "else is not null\n";
+        // get if without else and parse it
         auto children = casted->getChildren();
         std::cout << "Copied children\n";
+        // thats because else is always last
         auto mock = std::make_shared<Parser::IfStatement>(
                 casted->expr(),
                 std::vector<std::shared_ptr<Parser::Tree::Node>>(
@@ -311,20 +311,21 @@ std::string Translation::Go::parseIf(Translation::Go::ptr_t<Parser::Statement> i
         decIntend();
         res += addIntend("} ");
         std::cout << "Parsed mocked if\n";
-        // parse else
+
         std::cout << "Parsing else\n";
         res += "else ";
-        auto else_s = children[children.size()-1];
-        if(dynamic_cast<Parser::IfStatement*>(else_s->expr().get()) != nullptr) {
-            // it's else if - oh boy
+        // else always has one child!
+        // todo assert that
+        auto after_else_clause = casted->else_statement()->getChildren()[0];
+        // todo else_statement is snake case - should be camel case
+        if(dynamic_cast<Parser::IfStatement*>(after_else_clause.get()) != nullptr) {
             std::cout << "Parsing else if \n";
-            res += parseIf(dynamic_cast<Parser::Statement*>(else_s->expr().get()));
+            res += parseIf(dynamic_cast<Parser::Statement*>(after_else_clause.get()));
         } else {
-            // normal else
             std::cout << "Just a normal else\n";
             res += "{\n";
             incIntend();
-            res += parseCodeBlock(else_s->expr().get());
+            res += parseCodeBlock(after_else_clause.get());
             decIntend();
             res += "}\n\n";
             std::cout << "Code block parsed";
