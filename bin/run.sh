@@ -32,16 +32,15 @@ FILE_PATH="${CURR_PATH}/output/${OUTPUT}.go"
 
 go fmt $FILE_PATH
 go build $FILE_PATH >"${CURR_PATH}/output/logs/go_build" 2>"${CURR_PATH}/output/logs/go_build_errors"
-
-if [ $? -ne 0 ]; then
-    echo "Go build problems!"
-    cp "$FILE_PATH" "${CURR_PATH}/output/logs"
-    rm "$FILE_PATH"
-    exit
-fi
+BUILD_OUTPUT=$?
 
 cp "$FILE_PATH" "${CURR_PATH}/output/logs"
 rm "$FILE_PATH"
+
+if [ $BUILD_OUTPUT -ne 0 ]; then
+    echo "Go build problems!"
+    exit
+fi
 
 mv "${CURR_PATH}/$OUTPUT" "${CURR_PATH}/output/${OUTPUT}"
 
