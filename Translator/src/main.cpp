@@ -12,15 +12,10 @@
 
 std::string tokenToStr(const Syntax::Token::Token&);
 
-int main() {
-    Source src("test2.conc");
+int main(int argv, char* argc[]) {
+    Source src(argc[1]);
     Logging::Logger lexer_log(std::cout, "[Lexer]: ");
     Syntax::Lexer lex(src, lexer_log);
-//    for(auto token = lex.nextToken();
-//        token.type() != Syntax::Token::Type::Eof;
-//        token = lex.nextToken()) {
-//        std::cout << tokenToStr(token);
-//    }
 
     Logging::Logger log(std::cout, "[Parser]: ");
     Parser::Parser pars(lex, log);
