@@ -1,0 +1,21 @@
+
+
+fn main() {
+    log("%s", "Please enter a number")
+    
+    let num = 0
+    ___parse_raw("fmt.Scan(&num)")
+
+    loop num < 0 {
+        num = num + 1
+    }
+
+    if num < 0 {
+        log("%s", "It is less than 0")
+    } else if num > 0 {
+        log("%s", "it is greater than zero")
+    } else {
+        log("%s", "It is a zero")
+    }
+
+}

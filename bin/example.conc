@@ -1,0 +1,45 @@
+
+fn print_int(to_print) {
+    log("Printing int: %d\n", to_print)
+    return 0
+}
+
+fn print_with_wait(to_print, wait) {
+    log("Before wait: %d time is: %v\n", to_print, ___from_time_Now())
+    ___parse_raw("time.Sleep(time.Duration(wait)*time.Millisecond)")
+    log("After wait: %d time is: %v\n", to_print, ___from_time_Now())
+    return 0
+}
+
+fn print_with_wait_critical(to_print, wait) {
+    log("Before wait: %d time is: %v\n", to_print, ___from_time_Now())
+    critical {
+        ___parse_raw("time.Sleep(time.Duration(wait)*time.Millisecond)")
+        log("After wait: %d time is: %v\n", to_print, ___from_time_Now())
+    }
+    return 0
+}
+
+# delete in later release 
+fn test() {
+    return 0
+}
+
+fn main() {
+    ___from_time_Sleep(1)
+    print_int(0)
+    print_with_wait(1, 2000)
+    concurrent {
+        {
+            print_with_wait(9, 10000)
+            print_with_wait(8, 3000)
+        }
+        print_with_wait(7, 3000)
+        print_with_wait(6, 3000)
+        print_with_wait(5, 1000)
+
+        print_with_wait_critical(2, 6000)
+        print_with_wait_critical(3, 6000)
+    }
+
+}
