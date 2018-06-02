@@ -42,6 +42,7 @@ std::string Translation::Go::documentHeader() {
     std::cout << "Document header\n";
     std::string head = "package main\n\n";
     for(const auto& import: _imports) {
+        std::cout << "Adding import to header " << import << "\n";
         head += "import \"" + import + "\"\n";
     }
     return head + "\n";
@@ -200,6 +201,7 @@ std::string Translation::Go::parseExpr(ptr_t<Parser::Expression> expr) {
     if(dynamic_cast<Parser::PrintCall*>(expr)) {
         _imports.insert("fmt");
     } else if(auto call = dynamic_cast<Parser::LibraryFunctionCall*>(expr); call != nullptr) {
+        std::cout << "Inserting library " << call->library() << "\n";
         _imports.insert(call->library());
     }
     return addIntend(expr->parse() + "\n");
